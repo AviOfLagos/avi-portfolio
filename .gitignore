@@ -1,30 +1,48 @@
-node_modules/
-dist/
-build/
-.cache/
-coverage/
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-package-lock.json
-*.tgz
-.env
-.env.*
-.DS_Store
-.idea/
-.vscode/
-/.pnp/
-/.pnp.js
-/.turbo
-/.parcel-cache/
-/.vite/
-/out/
-/.next/
-/.vercel/
-public/assets/
-*.local
-coverage/
-/.egg-info/
-__pycache__/
-*.pyc
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# local cleanup staging (not part of the project)
+_to_delete/ 
+_incoming.tar.gz
+
+.fuse_hidden*
+.seo-god/
