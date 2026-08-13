@@ -1,17 +1,8 @@
 'use client'
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import {
-  motion,
-  useMotionValue,
-  useSpring,
-  useScroll,
-  useVelocity,
-  useTransform,
-  useAnimationFrame,
-  useInView,
-  animate,
-} from 'motion/react'
+import { useInViewOnce } from '@/lib/use-in-view'
+import { subscribeScroll } from '@/lib/scroll'
 
 /* ---------- Masked line reveal ---------- */
 export function Reveal({
@@ -25,21 +16,17 @@ export function Reveal({
   y?: string
   as?: 'span' | 'div'
 }) {
-  const Tag = as === 'div' ? motion.div : motion.span
-  const Inner = as === 'div' ? motion.div : motion.span
+  const [ref, inView] = useInViewOnce<HTMLDivElement>('-20% 0px')
+  const Tag = as === 'div' ? 'div' : 'span'
+  const Inner = as === 'div' ? 'div' : 'span'
   return (
     <Tag
-      className="line-mask"
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, amount: 0.4 }}
+      ref={ref as React.Ref<HTMLDivElement & HTMLSpanElement>}
+      className={`line-mask ${inView ? 'is-visible' : ''}`}
     >
       <Inner
-        style={{ display: 'block' }}
-        variants={{
-          hidden: { y },
-          visible: { y: 0, transition: { duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] } },
-        }}
+        className="reveal__inner"
+        style={{ '--reveal-y': y, '--d': `${delay}s` } as React.CSSProperties}
       >
         {children}
       </Inner>
@@ -57,17 +44,49 @@ export function FadeUp({
   delay?: number
   className?: string
 }) {
+  const [ref, inView] = useInViewOnce<HTMLDivElement>()
   return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-8%' }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+    <div
+      ref={ref}
+      className={`fade-up ${inView ? 'is-visible' : ''} ${className ?? ''}`}
+      style={{ '--d': `${delay}s` } as React.CSSProperties}
     >
       {children}
-    </motion.div>
+    </div>
   )
+}
+
+/**
+ * Frame-loop spring, matching motion's feel closely enough for cursor-follow
+ * effects. Returns a setter for the target; the element is written to directly
+ * so React never re-renders during the animation.
+ */
+function useFollowSpring(ref: React.RefObject<HTMLElement | null>, stiffness: number) {
+  const target = useRef({ x: 0, y: 0 })
+  const current = useRef({ x: 0, y: 0 })
+  const running = useRef(false)
+
+  const tick = () => {
+    const t = target.current
+    const c = current.current
+    c.x += (t.x - c.x) * stiffness
+    c.y += (t.y - c.y) * stiffness
+    const el = ref.current
+    if (el) el.style.transform = `translate3d(${c.x}px, ${c.y}px, 0)`
+    if (Math.abs(t.x - c.x) > 0.05 || Math.abs(t.y - c.y) > 0.05) {
+      requestAnimationFrame(tick)
+    } else {
+      running.current = false
+    }
+  }
+
+  return (x: number, y: number) => {
+    target.current = { x, y }
+    if (!running.current) {
+      running.current = true
+      requestAnimationFrame(tick)
+    }
+  }
 }
 
 /* ---------- Magnetic wrapper ---------- */
@@ -79,31 +98,23 @@ export function Magnetic({
   strength?: number
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const x = useMotionValue(0)
-  const y = useMotionValue(0)
-  const sx = useSpring(x, { stiffness: 180, damping: 14 })
-  const sy = useSpring(y, { stiffness: 180, damping: 14 })
+  const setTarget = useFollowSpring(ref, 0.18)
 
   const onMove = (e: React.MouseEvent) => {
     const r = ref.current?.getBoundingClientRect()
     if (!r) return
-    x.set((e.clientX - r.left - r.width / 2) * strength)
-    y.set((e.clientY - r.top - r.height / 2) * strength)
-  }
-  const onLeave = () => {
-    x.set(0)
-    y.set(0)
+    setTarget((e.clientX - r.left - r.width / 2) * strength, (e.clientY - r.top - r.height / 2) * strength)
   }
 
   return (
-    <motion.div
+    <div
       ref={ref}
       onMouseMove={onMove}
-      onMouseLeave={onLeave}
-      style={{ x: sx, y: sy, display: 'inline-block' }}
+      onMouseLeave={() => setTarget(0, 0)}
+      style={{ display: 'inline-block', willChange: 'transform' }}
     >
       {children}
-    </motion.div>
+    </div>
   )
 }
 
@@ -114,26 +125,66 @@ function wrap(min: number, max: number, v: number) {
 }
 
 export function Marquee({ items }: { items: string[] }) {
-  const baseX = useMotionValue(0)
-  const { scrollY } = useScroll()
-  const scrollVelocity = useVelocity(scrollY)
-  const smoothVelocity = useSpring(scrollVelocity, { damping: 50, stiffness: 320 })
-  const velocityFactor = useTransform(smoothVelocity, [-1200, 0, 1200], [-4, 0, 4])
-  const directionRef = useRef(1)
-  const x = useTransform(baseX, (v) => `${wrap(-25, 0, v)}%`)
+  const wrapRef = useRef<HTMLDivElement>(null)
+  const innerRef = useRef<HTMLDivElement>(null)
 
-  useAnimationFrame((_t, delta) => {
-    const vf = velocityFactor.get()
-    if (vf < 0) directionRef.current = -1
-    else if (vf > 0) directionRef.current = 1
-    let moveBy = directionRef.current * -1.6 * (delta / 1000)
-    moveBy += moveBy * Math.abs(vf)
-    baseX.set(baseX.get() + moveBy)
-  })
+  useEffect(() => {
+    const el = innerRef.current
+    const host = wrapRef.current
+    if (!el || !host) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let base = 0
+    let direction = -1
+    let velocity = 0
+    let lastScroll = window.scrollY
+    let lastTime = 0
+    let raf = 0
+    let visible = true
+
+    const io = new IntersectionObserver(([e]) => {
+      visible = e.isIntersecting
+      if (visible && !raf) {
+        lastTime = 0
+        raf = requestAnimationFrame(loop)
+      }
+    })
+    io.observe(host)
+
+    const onScroll = () => {
+      const y = window.scrollY
+      const delta = y - lastScroll
+      lastScroll = y
+      if (delta !== 0) direction = delta > 0 ? -1 : 1
+      // Decays back to the idle drift speed in the loop below.
+      velocity = Math.min(Math.abs(delta) / 12, 4)
+    }
+    const unsubscribe = subscribeScroll(onScroll)
+
+    function loop(time: number) {
+      raf = 0
+      if (!visible) return
+      const delta = lastTime ? time - lastTime : 16
+      lastTime = time
+      velocity *= 0.9
+      let moveBy = direction * 1.6 * (delta / 1000)
+      moveBy += moveBy * velocity
+      base = wrap(-25, 0, base + moveBy)
+      el!.style.transform = `translateX(${base}%)`
+      raf = requestAnimationFrame(loop)
+    }
+    raf = requestAnimationFrame(loop)
+
+    return () => {
+      io.disconnect()
+      unsubscribe()
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
 
   return (
-    <div className="marquee" aria-hidden="true">
-      <motion.div className="marquee__inner" style={{ x }}>
+    <div className="marquee" aria-hidden="true" ref={wrapRef}>
+      <div className="marquee__inner" ref={innerRef}>
         {[0, 1, 2, 3].map((n) => (
           <span key={n} style={{ display: 'inline-flex' }}>
             {items.map((it, i) => (
@@ -143,25 +194,31 @@ export function Marquee({ items }: { items: string[] }) {
             ))}
           </span>
         ))}
-      </motion.div>
+      </div>
     </div>
   )
 }
 
 /* ---------- Count-up stat ---------- */
 export function StatValue({ value, suffix }: { value: number; suffix: string }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-10%' })
+  const [ref, inView] = useInViewOnce<HTMLDivElement>('-10% 0px')
   const [display, setDisplay] = useState(0)
 
   useEffect(() => {
     if (!inView) return
-    const controls = animate(0, value, {
-      duration: 1.4,
-      ease: [0.22, 1, 0.36, 1],
-      onUpdate: (v) => setDisplay(Math.round(v)),
-    })
-    return () => controls.stop()
+    const duration = 1400
+    let raf = 0
+    let start = 0
+    const step = (time: number) => {
+      if (!start) start = time
+      const p = Math.min((time - start) / duration, 1)
+      // easeOutExpo-ish, matches the old cubic-bezier(0.22, 1, 0.36, 1) closely.
+      const eased = 1 - Math.pow(1 - p, 3)
+      setDisplay(Math.round(eased * value))
+      if (p < 1) raf = requestAnimationFrame(step)
+    }
+    raf = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(raf)
   }, [inView, value])
 
   return (
@@ -174,7 +231,26 @@ export function StatValue({ value, suffix }: { value: number; suffix: string }) 
 
 /* ---------- Scroll progress bar ---------- */
 export function ScrollProgress() {
-  const { scrollYProgress } = useScroll()
-  const scaleX = useSpring(scrollYProgress, { stiffness: 200, damping: 40, restDelta: 0.001 })
-  return <motion.div className="progress" style={{ scaleX }} />
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let raf = 0
+    const update = () => {
+      raf = 0
+      const max = document.documentElement.scrollHeight - window.innerHeight
+      const p = max > 0 ? window.scrollY / max : 0
+      ref.current?.style.setProperty('--progress', String(p))
+    }
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update)
+    }
+    update()
+    const unsubscribe = subscribeScroll(onScroll)
+    return () => {
+      unsubscribe()
+      if (raf) cancelAnimationFrame(raf)
+    }
+  }, [])
+
+  return <div className="progress" ref={ref} />
 }

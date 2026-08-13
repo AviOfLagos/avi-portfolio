@@ -1,13 +1,15 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
-import { motion, AnimatePresence, useMotionValue, useSpring, animate } from 'motion/react'
-import Lenis from 'lenis'
-import { PERSON, VENTURES } from '@/lib/content'
+import { usePathname } from 'next/navigation'
+import { PERSON } from '@/lib/content'
+import { LogoMark, LogoWordmark } from './Logo'
+import { subscribeScroll, emitScroll } from '@/lib/scroll'
 
-const ACCENTS = ['#c8ff3e', '#b197fc', '#66e0ff', '#ffb340', '#ff7a59']
+// Palette JS (plus its router/venture payload) only downloads once it is summoned.
+const CommandPalette = dynamic(() => import('./CommandPalette'), { ssr: false })
 
 const NAV_LINKS = [
   { href: '/work', label: 'Work' },
@@ -16,24 +18,41 @@ const NAV_LINKS = [
   { href: '/contact', label: 'Contact' },
 ]
 
+const prefersReducedMotion = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
 /* ---------- Smooth scroll ---------- */
 export function SmoothScroll() {
   const pathname = usePathname()
 
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-    const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
-    ;(window as unknown as { lenis?: Lenis }).lenis = lenis
+    if (prefersReducedMotion()) return
+    // Coarse pointers already have native momentum scrolling; Lenis is pure overhead there.
+    if (!window.matchMedia('(pointer: fine)').matches) return
+
     let raf = 0
-    const loop = (time: number) => {
-      lenis.raf(time)
+    let cancelled = false
+    let instance: { raf: (t: number) => void; destroy: () => void } | undefined
+
+    import('lenis').then(({ default: Lenis }) => {
+      if (cancelled) return
+      const lenis = new Lenis({ lerp: 0.1, smoothWheel: true })
+      instance = lenis
+      // Lenis swallows native scroll events; re-broadcast so listeners keep working.
+      lenis.on('scroll', emitScroll)
+      ;(window as unknown as { lenis?: unknown }).lenis = lenis
+      const loop = (time: number) => {
+        lenis.raf(time)
+        raf = requestAnimationFrame(loop)
+      }
       raf = requestAnimationFrame(loop)
-    }
-    raf = requestAnimationFrame(loop)
+    })
+
     return () => {
+      cancelled = true
       cancelAnimationFrame(raf)
-      lenis.destroy()
-      ;(window as unknown as { lenis?: Lenis }).lenis = undefined
+      instance?.destroy()
+      ;(window as unknown as { lenis?: unknown }).lenis = undefined
     }
   }, [])
 
@@ -46,63 +65,70 @@ export function SmoothScroll() {
 
 /* ---------- Cursor ---------- */
 export function Cursor() {
-  const x = useMotionValue(-200)
-  const y = useMotionValue(-200)
-  const dotX = useSpring(x, { stiffness: 500, damping: 35 })
-  const dotY = useSpring(y, { stiffness: 500, damping: 35 })
-  const glowX = useSpring(x, { stiffness: 90, damping: 25 })
-  const glowY = useSpring(y, { stiffness: 90, damping: 25 })
-  const [big, setBig] = useState(false)
+  const dotRef = useRef<HTMLDivElement>(null)
+  const glowRef = useRef<HTMLDivElement>(null)
+  const [enabled, setEnabled] = useState(false)
 
   useEffect(() => {
-    const move = (e: MouseEvent) => {
-      x.set(e.clientX)
-      y.set(e.clientY)
-      const t = e.target as HTMLElement
-      setBig(!!t.closest?.('a, button, .venture, .archive__row, .post-row'))
+    if (!window.matchMedia('(pointer: fine)').matches || prefersReducedMotion()) return
+    setEnabled(true)
+  }, [])
+
+  useEffect(() => {
+    if (!enabled) return
+    const dot = dotRef.current
+    const glow = glowRef.current
+    if (!dot || !glow) return
+
+    const target = { x: -200, y: -200 }
+    const fast = { x: -200, y: -200 }
+    const slow = { x: -200, y: -200 }
+    let scale = 1
+    let scaleTarget = 1
+    let raf = 0
+    let hoverFrame = 0
+    let lastTarget: HTMLElement | null = null
+
+    const loop = () => {
+      // Two different follow rates reproduce the old dot/glow spring pairing.
+      fast.x += (target.x - fast.x) * 0.35
+      fast.y += (target.y - fast.y) * 0.35
+      slow.x += (target.x - slow.x) * 0.08
+      slow.y += (target.y - slow.y) * 0.08
+      scale += (scaleTarget - scale) * 0.2
+      dot.style.transform = `translate3d(${fast.x}px, ${fast.y}px, 0) translate(-50%, -50%) scale(${scale})`
+      glow.style.transform = `translate3d(${slow.x}px, ${slow.y}px, 0) translate(-50%, -50%)`
+      raf = requestAnimationFrame(loop)
     }
-    window.addEventListener('mousemove', move)
-    return () => window.removeEventListener('mousemove', move)
-  }, [x, y])
+    raf = requestAnimationFrame(loop)
+
+    const move = (e: MouseEvent) => {
+      target.x = e.clientX
+      target.y = e.clientY
+      lastTarget = e.target as HTMLElement
+      // closest() walks the DOM, so only run it once per frame instead of per event.
+      if (hoverFrame) return
+      hoverFrame = requestAnimationFrame(() => {
+        hoverFrame = 0
+        scaleTarget = lastTarget?.closest?.('a, button, .venture, .archive__row, .post-row') ? 3.2 : 1
+      })
+    }
+    window.addEventListener('mousemove', move, { passive: true })
+
+    return () => {
+      window.removeEventListener('mousemove', move)
+      cancelAnimationFrame(raf)
+      if (hoverFrame) cancelAnimationFrame(hoverFrame)
+    }
+  }, [enabled])
+
+  if (!enabled) return null
 
   return (
     <>
-      <motion.div
-        className="cursor-glow"
-        style={{ x: glowX, y: glowY, translateX: '-50%', translateY: '-50%' }}
-      />
-      <motion.div
-        className="cursor-dot"
-        style={{ x: dotX, y: dotY, translateX: '-50%', translateY: '-50%' }}
-        animate={{ scale: big ? 3.2 : 1 }}
-        transition={{ type: 'spring', stiffness: 400, damping: 28 }}
-      />
+      <div className="cursor-glow" ref={glowRef} />
+      <div className="cursor-dot" ref={dotRef} />
     </>
-  )
-}
-
-/* ---------- Preloader (home only) ---------- */
-export function Preloader({ onDone }: { onDone: () => void }) {
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    const controls = animate(0, 100, {
-      duration: 1.1,
-      ease: [0.65, 0, 0.35, 1],
-      onUpdate: (v) => setCount(Math.round(v)),
-      onComplete: () => setTimeout(onDone, 220),
-    })
-    return () => controls.stop()
-  }, [onDone])
-
-  return (
-    <motion.div
-      className="preloader"
-      exit={{ y: '-100%', transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] } }}
-    >
-      <span className="mono">{PERSON.name} — Portfolio &rsquo;26</span>
-      <span className="preloader__count">{count}%</span>
-    </motion.div>
   )
 }
 
@@ -112,27 +138,50 @@ export function Nav() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
+  const [paletteMounted, setPaletteMounted] = useState(false)
+
+  const openPalette = () => {
+    setPaletteMounted(true)
+    setPaletteOpen(true)
+  }
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
+    let frame = 0
+    const onScroll = () => {
+      if (frame) return
+      frame = requestAnimationFrame(() => {
+        frame = 0
+        setScrolled(window.scrollY > 40)
+      })
+    }
     onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const unsubscribe = subscribeScroll(onScroll)
+    return () => {
+      unsubscribe()
+      if (frame) cancelAnimationFrame(frame)
+    }
   }, [])
 
   useEffect(() => setMenuOpen(false), [pathname])
 
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setPaletteMounted(true)
+        setPaletteOpen((o) => !o)
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
   return (
     <>
-      <motion.nav
-        className={`nav ${scrolled ? 'nav--scrolled' : ''}`}
-        initial={{ y: -60, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-      >
-        <Link className="nav__logo" href="/">
-          {PERSON.initials}
-          <span className="accent">.</span>
+      <nav className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
+        <Link className="nav__logo" href="/" aria-label={`${PERSON.name} — home`}>
+          <LogoMark size={26} />
+          <LogoWordmark height={17} />
         </Link>
         <div className="nav__links">
           {NAV_LINKS.map((l) => (
@@ -147,7 +196,8 @@ export function Nav() {
           ))}
           <button
             className="nav__kbd"
-            onClick={() => setPaletteOpen(true)}
+            onClick={openPalette}
+            onPointerEnter={() => setPaletteMounted(true)}
             aria-label="Open command palette"
           >
             ⌘K
@@ -162,221 +212,23 @@ export function Nav() {
             </svg>
           </button>
         </div>
-      </motion.nav>
+      </nav>
 
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            className="mobile-menu"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            {NAV_LINKS.map((l, i) => (
-              <motion.div
-                key={l.href}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.06 * i }}
-              >
-                <Link href={l.href}>{l.label}</Link>
-              </motion.div>
-            ))}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      <CommandPalette open={paletteOpen} setOpen={setPaletteOpen} />
-    </>
-  )
-}
-
-/* ---------- Command palette ---------- */
-type Action = { label: string; hint: string; group: string; run: () => void }
-
-function CommandPalette({
-  open,
-  setOpen,
-}: {
-  open: boolean
-  setOpen: (v: boolean | ((o: boolean) => boolean)) => void
-}) {
-  const router = useRouter()
-  const [query, setQuery] = useState('')
-  const [cursor, setCursor] = useState(0)
-  const inputRef = useRef<HTMLInputElement>(null)
-
-  const actions: Action[] = [
-    { label: 'Home', hint: 'Page', group: 'Navigate', run: () => router.push('/') },
-    { label: 'Work', hint: 'Page', group: 'Navigate', run: () => router.push('/work') },
-    { label: 'About', hint: 'Page', group: 'Navigate', run: () => router.push('/about') },
-    { label: 'Writing', hint: 'Page', group: 'Navigate', run: () => router.push('/writing') },
-    { label: 'Contact', hint: 'Page', group: 'Navigate', run: () => router.push('/contact') },
-    ...VENTURES.map((v) => ({
-      label: v.name,
-      hint: 'Case study',
-      group: 'Projects',
-      run: () => router.push(`/work/${v.slug}`),
-    })),
-    {
-      label: 'Copy email',
-      hint: PERSON.email,
-      group: 'Actions',
-      run: () => navigator.clipboard?.writeText(PERSON.email),
-    },
-    {
-      label: 'Open GitHub',
-      hint: 'External',
-      group: 'Actions',
-      run: () => window.open(PERSON.socials.github, '_blank'),
-    },
-    {
-      label: 'Party mode',
-      hint: 'Easter egg',
-      group: 'Actions',
-      run: () => {
-        let i = 0
-        const id = setInterval(() => {
-          document.documentElement.style.setProperty('--accent', ACCENTS[i++ % ACCENTS.length])
-          if (i > 14) clearInterval(id)
-        }, 180)
-      },
-    },
-  ]
-
-  const filtered = actions.filter((a) => a.label.toLowerCase().includes(query.toLowerCase()))
-
-  useEffect(() => {
-    if (open) {
-      setQuery('')
-      setCursor(0)
-      setTimeout(() => inputRef.current?.focus(), 30)
-    }
-  }, [open])
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-        e.preventDefault()
-        setOpen((o: boolean) => !o)
-      }
-      if (e.key === 'Escape') setOpen(false)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [setOpen])
-
-  const onInputKey = (e: React.KeyboardEvent) => {
-    if (e.key === 'ArrowDown') {
-      e.preventDefault()
-      setCursor((c) => Math.min(c + 1, filtered.length - 1))
-    }
-    if (e.key === 'ArrowUp') {
-      e.preventDefault()
-      setCursor((c) => Math.max(c - 1, 0))
-    }
-    if (e.key === 'Enter' && filtered[cursor]) {
-      filtered[cursor].run()
-      setOpen(false)
-    }
-  }
-
-  let lastGroup = ''
-
-  return (
-    <AnimatePresence>
-      {open && (
-        <motion.div
-          className="palette-overlay"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setOpen(false)}
-        >
-          <motion.div
-            className="palette"
-            onClick={(e) => e.stopPropagation()}
-            initial={{ y: 24, scale: 0.97, opacity: 0 }}
-            animate={{ y: 0, scale: 1, opacity: 1 }}
-            exit={{ y: 12, scale: 0.98, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-          >
-            <input
-              ref={inputRef}
-              className="palette__input"
-              placeholder="Type a command…"
-              value={query}
-              onChange={(e) => {
-                setQuery(e.target.value)
-                setCursor(0)
-              }}
-              onKeyDown={onInputKey}
-            />
-            <div className="palette__list">
-              {filtered.map((a, i) => {
-                const showGroup = a.group !== lastGroup
-                lastGroup = a.group
-                return (
-                  <div key={a.label}>
-                    {showGroup && <div className="palette__group">{a.group}</div>}
-                    <button
-                      className={`palette__item ${i === cursor ? 'active' : ''}`}
-                      onMouseEnter={() => setCursor(i)}
-                      onClick={() => {
-                        a.run()
-                        setOpen(false)
-                      }}
-                    >
-                      {a.label}
-                      <span className="palette__hint">{a.hint}</span>
-                    </button>
-                  </div>
-                )
-              })}
-              {!filtered.length && <div className="palette__item">Nothing found.</div>}
+      {menuOpen && (
+        <div className="mobile-menu">
+          {NAV_LINKS.map((l, i) => (
+            <div
+              key={l.href}
+              className="mobile-menu__item"
+              style={{ '--d': `${0.06 * i}s` } as React.CSSProperties}
+            >
+              <Link href={l.href}>{l.label}</Link>
             </div>
-          </motion.div>
-        </motion.div>
+          ))}
+        </div>
       )}
-    </AnimatePresence>
-  )
-}
 
-/* ---------- Local time ---------- */
-export function LocalTime() {
-  const [time, setTime] = useState('')
-  useEffect(() => {
-    const tick = () =>
-      setTime(
-        new Intl.DateTimeFormat('en-GB', {
-          hour: '2-digit',
-          minute: '2-digit',
-          second: '2-digit',
-          timeZone: PERSON.timezone,
-        }).format(new Date()),
-      )
-    tick()
-    const id = setInterval(tick, 1000)
-    return () => clearInterval(id)
-  }, [])
-  return <span className="mono">Lagos — {time} WAT</span>
-}
-
-/* ---------- Page transition ---------- */
-export function PageTransition({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname()
-  return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={pathname}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-      >
-        {children}
-      </motion.div>
-    </AnimatePresence>
+      {paletteMounted && <CommandPalette open={paletteOpen} setOpen={setPaletteOpen} />}
+    </>
   )
 }

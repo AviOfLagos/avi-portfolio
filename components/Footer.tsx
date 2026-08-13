@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { PERSON } from '@/lib/content'
-import { LocalTime } from './Chrome'
+import { LocalTime } from './LocalTime'
+import { LogoMark } from './Logo'
 
 export function Footer() {
   const socials = [
@@ -40,7 +41,10 @@ export function Footer() {
           </nav>
         </div>
         <div className="footer__bottom">
-          <LocalTime />
+          <span className="footer__brand">
+            <LogoMark size={22} />
+            <LocalTime />
+          </span>
           <span className="mono">© {new Date().getFullYear()} {PERSON.name}</span>
           <span className="mono">Built with an unreasonable amount of springs</span>
         </div>

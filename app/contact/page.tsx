@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { PERSON } from '@/lib/content'
 import { Reveal, FadeUp, Magnetic } from '@/components/motion-primitives'
-import { LocalTime } from '@/components/Chrome'
+import { LocalTime } from '@/components/LocalTime'
 
 export const metadata: Metadata = {
   title: 'Contact',

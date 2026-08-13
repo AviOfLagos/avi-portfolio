@@ -1,22 +1,8 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
 import { PERSON } from '@/lib/content'
-import { Preloader } from './Chrome'
-
-function SpringLetter({ char, index }: { char: string; index: number }) {
-  const rot = ((index * 7) % 13) - 6
-  return (
-    <motion.span
-      className="letter"
-      whileHover={{ y: -18, rotate: rot, scale: 1.05, color: 'var(--accent)' }}
-      transition={{ type: 'spring', stiffness: 320, damping: 12 }}
-    >
-      {char === ' ' ? ' ' : char}
-    </motion.span>
-  )
-}
+import { Preloader } from './Preloader'
 
 export function Hero() {
   const [loading, setLoading] = useState(true)
@@ -43,46 +29,35 @@ export function Hero() {
   let letterIndex = 0
 
   const scrollToWork = () => {
-    const el = document.getElementById('work')
-    el?.scrollIntoView({ behavior: 'smooth' })
+    document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
     <>
-      <AnimatePresence>{loading && <Preloader onDone={done} />}</AnimatePresence>
+      {loading && <Preloader onDone={done} />}
 
-      <header className="hero container" id="top">
-        <motion.div
-          className="hero__eyebrow"
-          initial={{ opacity: 0 }}
-          animate={started ? { opacity: 1 } : {}}
-          transition={{ delay: 0.9, duration: 0.6 }}
-        >
+      <header className={`hero container ${started ? 'hero--started' : ''}`} id="top">
+        <div className="hero__eyebrow hero__fade" style={{ '--d': '0.9s' } as React.CSSProperties}>
           <span className="dot" />
           <span className="mono">
             {PERSON.title} · {PERSON.secondaryTitle} · {PERSON.location}
           </span>
-        </motion.div>
+        </div>
 
         <h1 className="hero__name" aria-label={PERSON.name}>
           {words.map((word) => (
             <span className="word" key={word} aria-hidden="true">
               {word.split('').map((char) => {
                 const i = letterIndex++
+                const rot = ((i * 7) % 13) - 6
                 return (
                   <span className="line-mask" key={i}>
-                    <motion.span
-                      style={{ display: 'inline-block' }}
-                      initial={{ y: '115%' }}
-                      animate={started ? { y: 0 } : {}}
-                      transition={{
-                        duration: 0.85,
-                        delay: 0.15 + i * 0.04,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
+                    <span
+                      className="hero__letter letter"
+                      style={{ '--i': i, '--rot': `${rot}deg` } as React.CSSProperties}
                     >
-                      <SpringLetter char={char} index={i} />
-                    </motion.span>
+                      <span>{char === ' ' ? ' ' : char}</span>
+                    </span>
                   </span>
                 )
               })}
@@ -91,28 +66,24 @@ export function Hero() {
         </h1>
 
         <div className="hero__sub">
-          <motion.p
-            className="hero__tagline"
-            initial={{ opacity: 0, y: 24 }}
-            animate={started ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 1.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          <p
+            className="hero__tagline hero__fade"
+            style={{ '--d': '1.1s', '--fade-y': '24px' } as React.CSSProperties}
           >
             I turn fuzzy ideas into <strong>products people actually use</strong> — and run the
             teams that ship them. Currently: an AI marketing OS, an agent registry, and Nigeria&rsquo;s
             first verified solar marketplace.
-          </motion.p>
-          <motion.button
-            className="hero__scroll nav__link"
+          </p>
+          <button
+            className="hero__scroll nav__link hero__fade"
             onClick={scrollToWork}
-            initial={{ opacity: 0 }}
-            animate={started ? { opacity: 1 } : {}}
-            transition={{ delay: 1.5 }}
+            style={{ '--d': '1.5s' } as React.CSSProperties}
           >
             <span className="mono">Scroll</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M12 4v16m0 0l-6-6m6 6l6-6" />
             </svg>
-          </motion.button>
+          </button>
         </div>
       </header>
     </>

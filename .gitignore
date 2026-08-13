@@ -41,7 +41,8 @@ yarn-error.log*
 next-env.d.ts
 
 # local cleanup staging (not part of the project)
-_to_delete/
+_to_delete/ 
 _incoming.tar.gz
 
 .fuse_hidden*
+.seo-god/
