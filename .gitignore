@@ -48,3 +48,7 @@ _incoming.tar.gz
 
 .fuse_hidden*
 .seo-god/
+
+# tool state, machine-local
+seo-god.json
+**/.DS_Store
