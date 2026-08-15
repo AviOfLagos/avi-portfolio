@@ -15,16 +15,25 @@ const nextConfig: NextConfig = {
     ],
   },
   async headers() {
+    // React's development build uses eval() for debugging features such as
+    // rebuilding stack traces, and Turbopack's HMR client needs a websocket.
+    // Both are dev-only: the production policy stays without 'unsafe-eval'.
+    const dev = process.env.NODE_ENV === "development";
+
     // 'unsafe-inline' on scripts is unavoidable without a nonce: Next inlines its
     // bootstrap and the streamed RSC payload. Everything else is locked down, so
     // an injected <script src> from another origin still cannot run.
     const csp = [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      // Vercel Analytics and Speed Insights are mounted in the root layout and
+      // load their script from this origin; without it the CSP blocks them and
+      // neither reports anything.
+      `script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com${dev ? " 'unsafe-eval'" : ""}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://cdn-images-1.medium.com https://i.pinimg.com",
       "font-src 'self' data:",
-      "connect-src 'self'",
+      // …and post their measurements back to these.
+      `connect-src 'self' https://va.vercel-scripts.com https://vitals.vercel-insights.com${dev ? " ws: http://localhost:*" : ""}`,
       // No third party may embed the site, so an overlay cannot trick a visitor
       // into clicking something they cannot see.
       "frame-ancestors 'none'",
