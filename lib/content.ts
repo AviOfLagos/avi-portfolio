@@ -53,6 +53,7 @@ export type Venture = {
     | "Web app"
     | "Web + PWA"
     | "Mobile app iOS + Android"
+    | "Web + mobile apps"
     | "Marketplace"
     | "Platform";
   /** The market it competes in, in the reader's words. */
@@ -83,7 +84,7 @@ export const VENTURES: Venture[] = [
     year: "2024 -",
     color: "#c8ff3e",
     glyph: "E/",
-    platform: "Web app",
+    platform: "Web + mobile apps",
     niche: "Marketing automation · AI agents",
     cover: "/shots/ellum-ai.webp",
     url: "https://www.ellum.ai",
@@ -107,12 +108,17 @@ export const VENTURES: Venture[] = [
     ],
     stack: [
       "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Python",
       "FastAPI",
       "PostgreSQL",
       "Agent orchestration",
       "MCP",
-      "Notion",
+      "Vercel",
       "Linear",
+      "Notion",
     ],
     featured: true,
   },
@@ -146,7 +152,17 @@ export const VENTURES: Venture[] = [
       { value: "16", label: "Nigerian cities covered at launch" },
       { value: "3", label: "feedback streams merged into one fix list: QA, beta, research" },
     ],
-    stack: ["Next.js", "PWA", "Verification workflow", "Vehicle history reports", "Split payments"],
+    stack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "PWA / service worker",
+      "Vercel",
+      "Verification workflow",
+      "Vehicle history reports",
+      "Split payments",
+    ],
     featured: true,
   },
   {
@@ -177,7 +193,15 @@ export const VENTURES: Venture[] = [
       { value: "3", label: "free interviews before payment" },
       { value: "100%", label: "of candidates receive their transcript" },
     ],
-    stack: ["Next.js", "Voice AI", "Rubric scoring engine", "Vercel"],
+    stack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "LiveKit",
+      "Speech-to-text / TTS",
+      "Rubric scoring engine",
+      "Vercel",
+    ],
     featured: true,
   },
   {
@@ -206,7 +230,15 @@ export const VENTURES: Venture[] = [
       { value: "Free", label: "calculator as the top of funnel" },
       { value: "1st", label: "verified solar marketplace in Nigeria" },
     ],
-    stack: ["Next.js", "Sizing calculator", "Supabase", "Vercel"],
+    stack: [
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Supabase",
+      "PostgreSQL",
+      "Sizing calculator",
+      "Vercel",
+    ],
     featured: true,
   },
   {
@@ -241,7 +273,14 @@ export const VENTURES: Venture[] = [
       { value: "4", label: "escalation stages: timer, zones, buddy, SOS" },
       { value: "5s", label: "to cancel an SOS before it arms" },
     ],
-    stack: ["Android", "iOS (in build)", "Watch companion", "On-device storage", "Voice guidance"],
+    stack: [
+      "Android",
+      "iOS (in build)",
+      "Watch companion",
+      "On-device storage",
+      "Offline routing",
+      "Voice guidance",
+    ],
     featured: true,
   },
 ];
