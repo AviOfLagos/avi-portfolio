@@ -1,0 +1,116 @@
+/* Print rules for /resume.
+   Next inlines any imported stylesheet globally, so every rule is scoped with
+   body:has(.resume-page) — the marker div only exists on this route. */
+
+.resume-page {
+  display: none;
+}
+
+.resume__contact {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+@media print {
+  body:has(.resume-page) {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Screen furniture: none of it survives a page. */
+  body:has(.resume-page) .nav,
+  body:has(.resume-page) .mobile-menu,
+  body:has(.resume-page) .footer,
+  body:has(.resume-page) .field--ambient,
+  body:has(.resume-page) .cursor-glow,
+  body:has(.resume-page) .cursor-dot,
+  body:has(.resume-page) .scroll-progress,
+  body:has(.resume-page) .skip-link,
+  body:has(.resume-page) .resume__actions,
+  body:has(.resume-page) .cert__hint {
+    display: none !important;
+  }
+
+  body:has(.resume-page) main,
+  body:has(.resume-page) .container,
+  body:has(.resume-page) .section,
+  body:has(.resume-page) .section--tight,
+  body:has(.resume-page) .page-head {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    content-visibility: visible !important;
+  }
+
+  /* Everything on screen fades or lifts in; on paper it must simply be there. */
+  body:has(.resume-page) * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body:has(.resume-page) .page-head__title {
+    font-size: 22pt;
+  }
+
+  body:has(.resume-page) .page-head__lede {
+    display: none !important;
+  }
+
+  body:has(.resume-page) .resume__heading {
+    font-size: 11pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  body:has(.resume-page) .resume__block {
+    border-top: 1px solid #999 !important;
+    padding-top: 0.8rem;
+    margin-top: 0.9rem;
+    break-inside: auto;
+  }
+
+  /* A role split across two sheets is unreadable. Keep each one whole. */
+  body:has(.resume-page) .resume__role,
+  body:has(.resume-page) .resume__skills > div,
+  body:has(.resume-page) .cert,
+  body:has(.resume-page) li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  body:has(.resume-page) .resume__roles {
+    gap: 1rem;
+  }
+
+  body:has(.resume-page) .resume__points,
+  body:has(.resume-page) .resume__list,
+  body:has(.resume-page) .resume__skills dd,
+  body:has(.resume-page) .resume__points li,
+  body:has(.resume-page) .resume__list li {
+    font-size: 9.5pt;
+    line-height: 1.35;
+    gap: 0.2rem;
+  }
+
+  body:has(.resume-page) .cert {
+    border: 0 !important;
+    padding: 0.1rem 0;
+  }
+
+  /* Links are dead on paper; the URL is not. */
+  body:has(.resume-page) .resume__list a::after {
+    content: ' (' attr(href) ')';
+    font-size: 8pt;
+  }
+
+  @page {
+    margin: 14mm;
+  }
+}

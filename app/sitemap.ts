@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { VENTURES } from '@/lib/content'
+import { TABS } from '@/app/resources/tabs'
 import { POSTS } from '@/lib/posts'
 import { SITE_URL } from '@/lib/site'
 
@@ -12,8 +13,17 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/about`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/resume`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE_URL}/writing`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
+    { url: `${SITE_URL}/resources`, lastModified: now, changeFrequency: 'weekly', priority: 0.7 },
     { url: `${SITE_URL}/contact`, lastModified: now, changeFrequency: 'yearly', priority: 0.6 },
   ]
+
+  // Each tab is its own indexable route, so each one belongs here.
+  const resources: MetadataRoute.Sitemap = TABS.map((t) => ({
+    url: `${SITE_URL}/resources/${t.slug}`,
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: 0.6,
+  }))
 
   const work: MetadataRoute.Sitemap = VENTURES.map((v) => ({
     url: `${SITE_URL}/work/${v.slug}`,
@@ -31,5 +41,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }))
 
-  return [...pages, ...work, ...writing]
+  return [...pages, ...resources, ...work, ...writing]
 }

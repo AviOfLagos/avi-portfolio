@@ -29,12 +29,12 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: { canonical: '/' },
   title: {
-    default: `${PERSON.name}, ${PERSON.title}`,
+    default: `${PERSON.name} (${PERSON.shortName}), ${PERSON.title}`,
     template: `%s, ${PERSON.name}`,
   },
   description: PERSON.summary,
   openGraph: {
-    title: `${PERSON.name}, ${PERSON.title}`,
+    title: `${PERSON.name} (${PERSON.shortName}), ${PERSON.title}`,
     description: PERSON.tagline,
     type: 'website',
     url: SITE_URL,
@@ -54,6 +54,7 @@ export const metadata: Metadata = {
     'PRD',
     'Next.js',
     PERSON.name,
+    ...PERSON.aliases,
   ],
   robots: {
     index: true,

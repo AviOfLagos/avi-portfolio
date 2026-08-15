@@ -19,6 +19,8 @@ export function GET() {
     '',
     `> ${PERSON.title} and ${PERSON.secondaryTitle} based in ${PERSON.location}. ${PERSON.summary}`,
     '',
+    `Also known as: ${PERSON.aliases.join(', ')}. All refer to the same person.`,
+    '',
     `Contact: ${PERSON.email} · Book a call: ${PERSON.booking.intro.url}`,
     '',
     '## Case studies',
