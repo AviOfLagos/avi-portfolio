@@ -100,7 +100,7 @@ export function Footer() {
               <LogoMark size={22} />
               <LocalTime />
             </span>
-            <span className="mono">© {new Date().getFullYear()} {PERSON.name}</span>
+            <span className="mono">© {new Date().getFullYear()} {PERSON.shortName}</span>
             <BackToTop />
           </div>
         </div>

@@ -28,6 +28,13 @@ export function Hero() {
   const words = PERSON.name.replace(/"/g, '').split(' ')
   let letterIndex = 0
 
+  // "Avi" is already sitting inside "David". Tint those three letters so the
+  // nickname most people use is visibly where it came from.
+  const nickname = PERSON.shortName.toLowerCase()
+  const nicknameWord = words.findIndex((w) => w.toLowerCase().includes(nickname))
+  const nicknameStart =
+    nicknameWord === -1 ? -1 : words[nicknameWord].toLowerCase().indexOf(nickname)
+
   const scrollToWork = () => {
     document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -45,15 +52,17 @@ export function Hero() {
         </div>
 
         <h1 className="hero__name" aria-label={PERSON.name}>
-          {words.map((word) => (
+          {words.map((word, w) => (
             <span className="word" key={word} aria-hidden="true">
-              {word.split('').map((char) => {
+              {word.split('').map((char, c) => {
                 const i = letterIndex++
                 const rot = ((i * 7) % 13) - 6
+                const inNickname =
+                  w === nicknameWord && c >= nicknameStart && c < nicknameStart + nickname.length
                 return (
                   <span className="line-mask" key={i}>
                     <span
-                      className="hero__letter letter"
+                      className={`hero__letter letter${inNickname ? ' hero__letter--nick' : ''}`}
                       style={{ '--i': i, '--rot': `${rot}deg` } as React.CSSProperties}
                     >
                       <span>{char === ' ' ? ' ' : char}</span>

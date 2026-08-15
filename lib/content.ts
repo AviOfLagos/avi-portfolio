@@ -29,7 +29,7 @@ export const PERSON = {
     github: "https://github.com/avioflagos",
     linkedin: "https://linkedin.com/in/avioflagos",
     x: "https://x.com/avioflagos",
-    figma: "https://figma.com/@avioflagos",
+    figma: "https://www.figma.com/@avioflagos",
     medium: "https://medium.com/@avioflagos",
     devto: "https://dev.to/avioflagos",
   },

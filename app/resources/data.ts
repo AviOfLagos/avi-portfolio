@@ -49,12 +49,11 @@ export function mediumImageFor(post: Pick<ExternalPost, 'url' | 'title'>): strin
 
 /* ---------------- Design & dev resources ---------------- */
 
-export type ResourceKind = 'figma' | 'pin' | 'dev-tool'
+export type ResourceKind = 'figma' | 'dev-tool'
 
 export type Resource = {
   id: string
   kind: ResourceKind
-  /** Empty for untitled Pinterest pins, which render as image-only cards. */
   title: string
   blurb?: string
   href: string
@@ -70,19 +69,43 @@ export type Resource = {
 
 export const KIND_LABELS: Record<ResourceKind, string> = {
   figma: 'Figma file',
-  pin: 'Pinterest pin',
   'dev-tool': 'Dev tool',
 }
 
-type Pin = {
+/* ---------------- Pinterest boards ---------------- */
+
+export type Pin = {
   url: string
+  /** Absent on most pins; those render image-only, with no caption. */
   title?: string
+  /** 236x thumbnail. */
   image: string
-  imageLarge: string
-  pubDate: string
+  /** Undocumented 564x variant of the same image; falls back to `image`. */
+  imageLarge: string | null
+  pubDate: string | null
 }
 
-const PINS = (pinterest as { pins: Pin[] }).pins
+export type PinBoard = {
+  slug: string
+  title: string
+  url: string
+  count: number
+  pins: Pin[]
+}
+
+/** How many real pins a board slider shows before the "see all" card. */
+export const BOARD_PIN_LIMIT = 8
+
+/**
+ * Board-level Pinterest data, scraped at build time by
+ * `scripts/fetch-pinterest.mjs` and committed as the fallback. Boards are shown
+ * largest first so the sparse ones (charts, interactions) sink to the bottom.
+ */
+export const PIN_BOARDS: PinBoard[] = [...(pinterest as { boards: PinBoard[] }).boards].sort(
+  (a, b) => b.count - a.count,
+)
+
+export const PIN_TOTAL = PIN_BOARDS.reduce((n, b) => n + b.count, 0)
 
 const figmaResources: Resource[] = FIGMA_RESOURCES.map((f) => ({
   id: `figma-${f.slug}`,
@@ -125,26 +148,10 @@ const devTools: Resource[] = OPEN_SOURCE.filter((p) => p.category === 'Developer
   ...(p.live ? { secondary: { href: p.live, label: 'Live demo' } } : {}),
 }))
 
-const pins: Resource[] = PINS.map((pin, i) => ({
-  id: `pin-${i}`,
-  kind: 'pin',
-  title: pin.title?.trim() ?? '',
-  href: pin.url,
-  image: pin.image,
-  imageLarge: pin.imageLarge,
-  meta: new Date(pin.pubDate).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' }),
-  tags: [],
-  facts: [
-    { label: 'Saved', value: new Date(pin.pubDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) },
-  ],
-  linkLabel: 'Open on Pinterest',
-}))
-
-/** Figma first, then dev tools, then the visual reference library. */
-export const RESOURCES: Resource[] = [...figmaResources, ...devTools, ...pins]
+/** Figma first, then dev tools. Pinterest lives in its own board sliders. */
+export const RESOURCES: Resource[] = [...figmaResources, ...devTools]
 
 export const KIND_COUNTS: Record<ResourceKind, number> = {
   figma: figmaResources.length,
   'dev-tool': devTools.length,
-  pin: pins.length,
 }

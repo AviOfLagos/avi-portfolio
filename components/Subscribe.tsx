@@ -28,6 +28,8 @@ const NOT_FORTUNES = [
   'Your users found a workflow you never designed. It is now the main one.',
 ]
 
+const EMAIL = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,63}$/
+
 const pickFortune = () => NOT_FORTUNES[Math.floor(Math.random() * NOT_FORTUNES.length)]
 
 function Cookie() {
@@ -55,6 +57,9 @@ export function Subscribe() {
   const [state, setState] = useState<State>('idle')
   const [message, setMessage] = useState('')
   const [fortune, setFortune] = useState('')
+  const [invalid, setInvalid] = useState(false)
+  // Bots fill every field they find; people never see this one.
+  const [trap, setTrap] = useState('')
 
   // The confirm route redirects back here with the outcome.
   useEffect(() => {
@@ -75,6 +80,21 @@ export function Subscribe() {
   const submit = async (event: React.FormEvent) => {
     event.preventDefault()
     if (state === 'sending') return
+
+    const address = email.trim()
+    if (!EMAIL.test(address) || address.length > 254) {
+      // Say what is wrong before spending a network round trip on it.
+      setInvalid(true)
+      setState('error')
+      setMessage(
+        address === ''
+          ? 'An email address goes here.'
+          : 'That is not an email address I can send to. Check for a typo.',
+      )
+      return
+    }
+
+    setInvalid(false)
     setState('sending')
     setMessage('')
 
@@ -82,7 +102,7 @@ export function Subscribe() {
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: address, company: trap }),
       })
       const data = await res.json().catch(() => ({}))
 
@@ -190,6 +210,19 @@ export function Subscribe() {
         <label className="mono subscribe__label" htmlFor={`${id}-email`}>
           Email
         </label>
+        <div className="subscribe__trap" aria-hidden="true">
+          <label htmlFor={`${id}-company`}>Company (leave this empty)</label>
+          <input
+            id={`${id}-company`}
+            name="company"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={trap}
+            onChange={(e) => setTrap(e.target.value)}
+          />
+        </div>
+
         <div className="subscribe__row">
           <input
             id={`${id}-email`}
@@ -200,11 +233,18 @@ export function Subscribe() {
             required
             autoComplete="email"
             spellCheck={false}
+            maxLength={254}
+            inputMode="email"
             placeholder="you@company.com"
             aria-describedby={`${id}-status`}
+            aria-invalid={invalid || undefined}
             onChange={(e) => {
               setEmail(e.target.value)
-              if (state === 'error') setState('idle')
+              if (state === 'error') {
+                setState('idle')
+                setInvalid(false)
+                setMessage('')
+              }
             }}
           />
           <button className="subscribe__button" type="submit" disabled={state === 'sending'}>
