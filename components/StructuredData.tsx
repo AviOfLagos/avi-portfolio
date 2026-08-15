@@ -38,7 +38,7 @@ export function PersonAndSiteLd() {
           '@type': 'Person',
           '@id': PERSON_ID,
           name: PERSON.name,
-          alternateName: PERSON.shortName,
+          alternateName: PERSON.aliases,
           url: SITE_URL,
           image: `${SITE_URL}${PERSON.portrait}`,
           email: `mailto:${PERSON.email}`,

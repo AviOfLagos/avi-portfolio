@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
-import { PERSON, EXPERIENCE, SKILLS, EDUCATION, CERTIFICATIONS, VENTURES } from '@/lib/content'
+import { PERSON, EXPERIENCE, SKILLS, EDUCATION, VENTURES } from '@/lib/content'
 import { BreadcrumbLd } from '@/components/StructuredData'
 import { Reveal, FadeUp } from '@/components/motion-primitives'
 import { HoverLetters } from '@/components/HoverLetters'
+import { CertificationList } from '@/components/CertificationList'
+import './resume-print.css'
 
 const RESUME_PDF = '/David-Olatunji-Resume.pdf'
 
@@ -23,10 +25,17 @@ export default function ResumePage() {
     <>
       <BreadcrumbLd trail={[{ name: 'Home', path: '/' }, { name: 'Résumé', path: '/resume' }]} />
 
+      {/* The print stylesheet keys off this class, so the @media print rules
+          only fire for this route even though the CSS import is global. */}
+      <div className="resume-page" />
+
       <section className="container page-head">
         <h1 className="page-head__title">
           <Reveal><HoverLetters text="Résumé" /></Reveal>
         </h1>
+        <p className="mono resume__contact">
+          {PERSON.name} · {PERSON.email} · {PERSON.phone} · {PERSON.location} · {PERSON.site}
+        </p>
         <p className="page-head__lede">
           {PERSON.title} and {PERSON.secondaryTitle} in {PERSON.location}. The full version, on the
           page so you don&rsquo;t have to download anything, and as a PDF if your process needs one.
@@ -113,13 +122,7 @@ export default function ResumePage() {
             </div>
             <div>
               <h2 className="resume__heading mono">Certifications</h2>
-              <ul className="resume__list">
-                {CERTIFICATIONS.map((c) => (
-                  <li key={c.name}>
-                    <strong>{c.name}</strong> — {c.issuer}
-                  </li>
-                ))}
-              </ul>
+              <CertificationList variant="list" />
             </div>
           </div>
         </FadeUp>

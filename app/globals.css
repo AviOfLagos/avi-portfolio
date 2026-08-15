@@ -915,8 +915,11 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
   gap: 2.5rem;
   flex-wrap: wrap;
 }
-/* Sits under the display word, not beside it. */
-.footer__lead > .footer__big { flex-basis: 100%; }
+/* Display word and booking column share the top row; the identity lines run
+   full width underneath both. */
+.footer__lead > .footer__big { flex: 1 1 auto; order: 1; }
+.footer__lead > .footer__pitch { order: 2; align-items: flex-end; text-align: right; }
+.footer__lead > .footer__identity { order: 3; flex-basis: 100%; }
 .footer__identity {
   display: flex;
   flex-direction: column;
@@ -945,6 +948,10 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
   align-items: flex-start;
   gap: 0.9rem;
   padding-bottom: 0.5rem;
+}
+/* Stacked layout: the booking column goes back to the left edge. */
+@media (max-width: 780px) {
+  .footer__lead > .footer__pitch { align-items: flex-start; text-align: left; }
 }
 .footer__email { color: var(--muted); transition: color 0.25s ease; }
 .footer__email:hover { color: var(--accent); }

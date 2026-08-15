@@ -1,6 +1,10 @@
 export const PERSON = {
   name: "David Olatunji",
   shortName: "Avi",
+  /** Every name people actually search for. Feeds schema.org alternateName,
+   *  metadata keywords and llms.txt, so "Avi of Lagos" and the handle resolve
+   *  to the same person as the legal name. */
+  aliases: ["Avi", "Avi of Lagos", "AviOfLagos", "avioflagos", "David Avi Olatunji"],
   site: "avi.nexprove.com",
   initials: "Avi",
   title: "Technical Product Manager",
@@ -470,7 +474,18 @@ export const EDUCATION = [
   { school: "Yaba College of Technology", detail: "Electrical Engineering" },
 ];
 
-export const CERTIFICATIONS = [
+export type Certification = {
+  name: string;
+  issuer: string;
+  /**
+   * Scan of the certificate, shown in the modal. Drop the file into
+   * public/certificates/ and point at it. Nothing is scanned yet, so every
+   * entry currently falls back to the placeholder in <CertificationList>.
+   */
+  image?: string;
+};
+
+export const CERTIFICATIONS: Certification[] = [
   { name: "Software Product Management", issuer: "University of Alberta" },
   {
     name: "Human Computer Interaction",
