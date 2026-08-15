@@ -2184,8 +2184,17 @@ body > .footer {
    nothing shifts position. */
 @media (min-width: 900px) and (hover: hover) {
   .md__list .md__row {
-    opacity: 0.3;
+    /* 0.3 read as a nice de-emphasis and measured as unreadable: against
+       --bg-soft it puts the title at 2.5:1, the excerpt at 1.9:1 and the mono
+       meta at 1.6:1, where AA wants 4.5:1. 0.7 keeps the recede while the
+       title clears 8.5:1 and the excerpt 5.2:1. */
+    opacity: 0.7;
     transition: opacity 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+  }
+  /* --muted cannot survive any dimming at all — it needs 0.88 to reach 4.5:1 —
+     so the small print steps up a token while the row is at rest. */
+  .md__list .md__row:not(.is-active) .md__row-meta {
+    color: var(--ink-dim);
   }
   .md__list:hover .md__row:hover,
   .md__list .md__row:focus-visible,
@@ -2519,4 +2528,18 @@ body > .footer {
   @page {
     margin: 14mm;
   }
+}
+
+
+/* ============================================================================
+   FORCED / INCREASED CONTRAST
+   Opacity-based de-emphasis is a stylistic choice, not information. When the
+   reader has asked for more contrast, drop it entirely.
+   ============================================================================ */
+@media (prefers-contrast: more) {
+  .md__list .md__row,
+  .hero__letter:not(.hero__letter--nick) {
+    opacity: 1;
+  }
+  .md__list .md__row:not(.is-active) .md__row-meta { color: var(--muted); }
 }
