@@ -1,7 +1,19 @@
 import { NextResponse } from 'next/server'
 import { isEmail, readConfig, sendConfirmation, sign } from '@/lib/newsletter'
+import { clientKey, rateLimit } from '@/lib/rate-limit'
+import { SITE_URL } from '@/lib/site'
 
 export async function POST(request: Request) {
+  // Without this, anyone can make us send confirmation mail to addresses that
+  // never asked for it — which is how a sending domain gets blocklisted.
+  const limit = rateLimit(`subscribe:${clientKey(request)}`, 5, 60 * 60 * 1000)
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: 'Too many attempts. Try again later.' },
+      { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } },
+    )
+  }
+
   const config = readConfig()
   if (!config) {
     // Better a clear failure than a form that pretends to work.
@@ -9,6 +21,11 @@ export async function POST(request: Request) {
       { error: 'Newsletter is not configured yet.' },
       { status: 503 },
     )
+  }
+
+  const declaredLength = Number(request.headers.get('content-length') ?? 0)
+  if (declaredLength > 2_000) {
+    return NextResponse.json({ error: 'Send an email address.' }, { status: 413 })
   }
 
   let email: unknown
@@ -33,7 +50,9 @@ export async function POST(request: Request) {
 
   const address = email.trim().toLowerCase()
   const token = sign(address, config.secret)
-  const link = new URL(`/api/subscribe/confirm?token=${token}`, request.url).toString()
+  // Built from SITE_URL, not request.url: request.url reflects the Host header,
+  // so a spoofed Host would mint confirmation links pointing at someone else.
+  const link = new URL(`/api/subscribe/confirm?token=${token}`, SITE_URL).toString()
 
   try {
     await sendConfirmation(address, link, config)

@@ -69,7 +69,7 @@ export function WritingPanel() {
                 slug={p.url}
                 color="#c8ff3e"
                 src={image}
-                alt=""
+                alt={image ? `${p.title}, article thumbnail` : ''}
                 width={128}
                 height={80}
                 sizes="128px"

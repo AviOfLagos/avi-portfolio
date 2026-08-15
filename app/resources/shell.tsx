@@ -21,7 +21,12 @@ export function metadataForTab(tab: TabSlug): Metadata {
     title: meta.title,
     description: meta.description,
     alternates: { canonical },
-    openGraph: { title: meta.title, description: meta.description, url: canonical },
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url: canonical,
+      images: ['/opengraph-image.png'],
+    },
   }
 }
 

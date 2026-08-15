@@ -38,6 +38,7 @@ export const metadata: Metadata = {
     description: PERSON.tagline,
     type: 'website',
     url: SITE_URL,
+    images: ['/opengraph-image.png'],
     siteName: PERSON.name,
     locale: 'en_US',
   },
@@ -73,6 +74,9 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${mono.variable}`}>
+      <head>
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+      </head>
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <PersonAndSiteLd />

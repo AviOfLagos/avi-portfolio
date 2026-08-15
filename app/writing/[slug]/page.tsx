@@ -31,6 +31,7 @@ export async function generateMetadata({
       publishedTime: p.date,
       authors: [PERSON.name],
       tags: [p.tag],
+      images: ['/opengraph-image.png'],
     },
   }
 }
