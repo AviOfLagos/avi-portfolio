@@ -5,7 +5,6 @@ import { useState } from 'react'
 import type { Certification } from '@/lib/content'
 import { CERTIFICATIONS } from '@/lib/content'
 import { Modal } from './Modal'
-import './certifications.css'
 
 /**
  * Certifications, each one a real button that opens the shared Modal with the

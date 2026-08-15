@@ -21,12 +21,6 @@ export function Footer() {
         <div className="footer__panel">
           <div className="footer__lead">
             <HoverLetters as="div" className="footer__big" text="Let’s talk" />
-            <div className="footer__identity">
-              <p className="mono footer__identity-role">
-                {PERSON.title} · {PERSON.location}
-              </p>
-              <p className="footer__identity-line">{PERSON.tagline}</p>
-            </div>
             <div className="footer__pitch">
               <span className="status mono">
                 <span className="status__dot" />
@@ -45,6 +39,15 @@ export function Footer() {
           </div>
 
           <hr className="footer__rule" />
+
+          <div className="footer__identity">
+            <p className="mono footer__identity-role">
+              {PERSON.title} · {PERSON.location}
+            </p>
+            <p className="footer__identity-line">{PERSON.tagline}</p>
+          </div>
+
+          <hr className="footer__rule footer__rule--tight" />
 
           <div className="footer__top">
             <nav className="footer__nav">
