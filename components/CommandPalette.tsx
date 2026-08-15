@@ -27,7 +27,10 @@ export default function CommandPalette({
       { label: 'Home', hint: 'Page', group: 'Navigate', run: () => router.push('/') },
       { label: 'Work', hint: 'Page', group: 'Navigate', run: () => router.push('/work') },
       { label: 'About', hint: 'Page', group: 'Navigate', run: () => router.push('/about') },
-      { label: 'Writing', hint: 'Page', group: 'Navigate', run: () => router.push('/resources') },
+      { label: 'Resources', hint: 'Page', group: 'Navigate', run: () => router.push('/resources') },
+      { label: 'Open source', hint: 'Resources', group: 'Navigate', run: () => router.push('/resources/open-source') },
+      { label: 'Design & dev resources', hint: 'Resources', group: 'Navigate', run: () => router.push('/resources/design-dev') },
+      { label: 'Résumé', hint: 'Page', group: 'Navigate', run: () => router.push('/resume') },
       { label: 'Contact', hint: 'Page', group: 'Navigate', run: () => router.push('/contact') },
       ...VENTURES.map((v) => ({
         label: v.name,
