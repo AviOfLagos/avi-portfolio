@@ -113,11 +113,11 @@ const figmaResources: Resource[] = FIGMA_RESOURCES.map((f) => ({
   title: f.title,
   blurb: f.blurb,
   href: f.url,
-  // f.cover is deliberately not used. The s3-alpha.figma.com and
-  // s3-figma-hubfile-images CDNs answer 403 to everything that is not
-  // figma.com — the image optimiser and the browser both fail — so the URLs
-  // render a broken image rather than a thumbnail. These fall through to the
-  // generated <Cover> until the covers are downloaded and self-hosted.
+  // Covers are self-hosted under /public/shots/figma: Figma's own CDNs
+  // (s3-alpha.figma.com, s3-figma-hubfile-images) answer 403 to anything that
+  // is not figma.com, so the remote URLs render as broken images. Anything
+  // without a cover still falls through to the generated <Cover>.
+  ...(f.cover ? { image: f.cover, imageLarge: f.cover } : {}),
   meta: f.category,
   tags: f.tags,
   facts: [

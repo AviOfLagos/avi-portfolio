@@ -77,9 +77,10 @@
 
 .hrow {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  /* thumb | title+excerpt | meta */
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 0.5rem 1rem;
-  align-items: baseline;
+  align-items: center;
   padding: 0.95rem 0.6rem;
   border-bottom: 1px solid var(--line);
   border-left: 2px solid transparent;
@@ -178,4 +179,30 @@
   .hrow--more:hover .hrow__arrow {
     transform: none;
   }
+}
+
+/* The see-more row carries no thumbnail; start it in the thumb column so its
+   label lines up with the row images above rather than indenting past them. */
+.hrow--more { grid-template-columns: minmax(0, 1fr) auto; }
+
+/* ---------- Row thumbnails ----------
+   Every row gets a cover: a real thumbnail where the source has one, otherwise
+   the generated <Cover>, so the column edge stays straight and no row waits on
+   an asset hand-off. */
+.hrow__thumb {
+  flex: none;
+  width: 112px;
+  height: 72px;
+  border-radius: 6px;
+  overflow: hidden;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  background: var(--bg-soft);
+}
+.hrow:hover .hrow__thumb,
+.hrow:focus-visible .hrow__thumb {
+  border-color: var(--line-strong);
+}
+@media (max-width: 620px) {
+  .hrow__thumb { width: 76px; height: 52px; }
 }

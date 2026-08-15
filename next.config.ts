@@ -12,12 +12,6 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "cdn-images-1.medium.com", pathname: "/**" },
       { protocol: "https", hostname: "i.pinimg.com", pathname: "/**" },
-      { protocol: "https", hostname: "s3-alpha.figma.com", pathname: "/**" },
-      {
-        protocol: "https",
-        hostname: "s3-figma-hubfile-images-production-cdn-cgi.figma.com",
-        pathname: "/**",
-      },
     ],
   },
   async headers() {

@@ -140,6 +140,98 @@
   flex-wrap: wrap;
 }
 
+/* ---------- Search ---------- */
+
+.rsearch {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-top: 1.4rem;
+}
+
+.rsearch__field {
+  position: relative;
+  flex: 1 1 18rem;
+  max-width: 28rem;
+}
+
+.rsearch__input {
+  width: 100%;
+  padding: 0.55rem 2.2rem 0.55rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.18s ease;
+}
+
+.rsearch__input::placeholder {
+  color: var(--muted);
+}
+
+.rsearch__input:hover {
+  border-color: var(--ink);
+}
+
+.rsearch__input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
+}
+
+/* The UA clear affordance duplicates our own button and is unlabelled. */
+.rsearch__input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.rsearch__clear {
+  position: absolute;
+  top: 50%;
+  right: 0.35rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+
+.rsearch__clear:hover {
+  color: var(--ink);
+  background: var(--bg-soft);
+}
+
+.rsearch__clear:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.rsearch__count {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rsearch__input,
+  .rsearch__clear {
+    transition: none;
+  }
+}
+
 /* ---------- Filters ---------- */
 
 .rfilters {
@@ -173,6 +265,15 @@
   color: var(--bg);
   background: var(--accent);
   border-color: var(--accent);
+}
+
+.rfilter:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.rfilter--reset {
+  margin-top: 0.2rem;
 }
 
 .rfilter .mono {
@@ -300,6 +401,18 @@
   color: var(--muted);
   padding: 2rem 0.9rem;
   font-size: 0.9rem;
+}
+
+/* The list-side empty state carries a reset button; the detail side is text. */
+.md__list .md__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.md__empty-text {
+  margin: 0;
 }
 
 /* ---------- Detail ---------- */

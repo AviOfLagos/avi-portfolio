@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { useCallback, useId, useRef, useState, type ReactNode } from 'react'
 
 /**
  * Master-detail list. One detail node exists at a time and it lives in a second
@@ -24,6 +24,9 @@ type Props<T> = {
   /** Where Enter takes you. */
   getHref: (item: T) => string
   emptyMessage?: string
+  /** Renders a reset affordance inside the empty state. */
+  onClearFilters?: () => void
+  clearLabel?: string
 }
 
 export function MasterDetail<T>({
@@ -34,19 +37,34 @@ export function MasterDetail<T>({
   label,
   getHref,
   emptyMessage = 'Nothing matches these filters.',
+  onClearFilters,
+  clearLabel = 'Clear filters',
 }: Props<T>) {
   const baseId = useId()
-  const [activeIndex, setActiveIndex] = useState(0)
+  /**
+   * Selection is held as an id, not an index. Search and filters reorder and
+   * shrink the list underneath it, and an index would silently point at a
+   * different item (or at nothing) the moment that happens. Resolving the id
+   * against the current list every render means a selected item that survives
+   * filtering stays selected, and one that is filtered out falls back to the
+   * first visible row instead of leaving a stale or empty detail panel.
+   */
+  const [selectedId, setSelectedId] = useState<string | null>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const detailRef = useRef<HTMLDivElement>(null)
 
-  // Filters can shrink the list out from under the selection.
-  const clamped = items.length === 0 ? -1 : Math.min(activeIndex, items.length - 1)
-  useEffect(() => {
-    setActiveIndex((i) => (items.length === 0 ? 0 : Math.min(i, items.length - 1)))
-  }, [items.length])
+  const found = selectedId === null ? -1 : items.findIndex((item) => getId(item) === selectedId)
+  const clamped = items.length === 0 ? -1 : found >= 0 ? found : 0
 
   const active = clamped >= 0 ? items[clamped] : undefined
+
+  const select = useCallback(
+    (index: number) => {
+      const item = items[index]
+      if (item) setSelectedId(getId(item))
+    },
+    [items, getId],
+  )
 
   const focusRow = useCallback((index: number) => {
     const row = listRef.current?.querySelectorAll<HTMLElement>('[role="option"]')[index]
@@ -82,7 +100,7 @@ export function MasterDetail<T>({
     }
     if (next === null) return
     e.preventDefault()
-    setActiveIndex(next)
+    select(next)
     focusRow(next)
   }
 
@@ -109,19 +127,28 @@ export function MasterDetail<T>({
               tabIndex={isActive ? 0 : -1}
               className={`md__row ${isActive ? 'is-active' : ''}`}
               onClick={() => {
-                setActiveIndex(i)
+                select(i)
                 revealDetail()
               }}
-              onFocus={() => setActiveIndex(i)}
+              onFocus={() => select(i)}
               onPointerEnter={(e) => {
-                if (e.pointerType === 'mouse') setActiveIndex(i)
+                if (e.pointerType === 'mouse') select(i)
               }}
             >
               {renderRow(item, isActive)}
             </div>
           )
         })}
-        {items.length === 0 && <p className="md__empty">{emptyMessage}</p>}
+        {items.length === 0 && (
+          <div className="md__empty">
+            <p className="md__empty-text">{emptyMessage}</p>
+            {onClearFilters && (
+              <button type="button" className="rfilter rfilter--reset" onClick={onClearFilters}>
+                {clearLabel}
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       <div
@@ -139,7 +166,7 @@ export function MasterDetail<T>({
             {renderDetail(active)}
           </div>
         ) : (
-          <p className="md__empty">{emptyMessage}</p>
+          <p className="md__empty md__empty-text">{emptyMessage}</p>
         )}
       </div>
     </div>
