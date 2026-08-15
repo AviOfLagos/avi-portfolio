@@ -52,16 +52,15 @@ export function Footer() {
                 <span className="mono">Pages</span>
                 <Link href="/work">Work</Link>
                 <Link href="/about">About</Link>
-                <Link href="/writing">Writing</Link>
+                <Link href="/resources">Resources</Link>
                 <Link href="/contact">Contact</Link>
+                <Link href="/resume">Résumé</Link>
               </div>
               <div className="footer__col">
                 <span className="mono">Resources</span>
-                <a href={PERSON.socials.medium} target="_blank" rel="noreferrer">Medium articles</a>
-                <a href={PERSON.socials.devto} target="_blank" rel="noreferrer">Dev.to articles</a>
-                <a href={PERSON.socials.figma} target="_blank" rel="noreferrer">Figma Community</a>
-                <a href={PERSON.socials.github} target="_blank" rel="noreferrer">Open source</a>
-                <Link href="/resume">Résumé</Link>
+                <Link href="/resources">Writing</Link>
+                <Link href="/resources/open-source">Open source</Link>
+                <Link href="/resources/design-dev">Design &amp; dev</Link>
               </div>
               <div className="footer__col">
                 <span className="mono">Book a call</span>

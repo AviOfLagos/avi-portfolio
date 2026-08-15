@@ -14,7 +14,7 @@ const CommandPalette = dynamic(() => import('./CommandPalette'), { ssr: false })
 const NAV_LINKS = [
   { href: '/work', label: 'Work' },
   { href: '/about', label: 'About' },
-  { href: '/resources', label: 'Writing' },
+  { href: '/resources', label: 'Resources' },
   { href: '/contact', label: 'Contact' },
 ]
 
