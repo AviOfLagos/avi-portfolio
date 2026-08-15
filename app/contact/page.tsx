@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: 'Contact',
   description: `Get in touch with ${PERSON.name}, ${PERSON.email}`,
   alternates: { canonical: '/contact' },
-  openGraph: { title: 'Contact', description: `Get in touch with ${PERSON.name}`, url: '/contact' },
+  openGraph: { title: 'Contact', description: `Get in touch with ${PERSON.name}`, url: '/contact', images: ['/opengraph-image.png'] },
 }
 
 export default function ContactPage() {

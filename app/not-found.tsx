@@ -7,6 +7,9 @@ export const metadata: Metadata = {
   title: 'Not found',
   description: 'That page does not exist.',
   robots: { index: false, follow: true },
+  // Inheriting the layout canonical would point every missing URL at the
+  // homepage, which is a soft-404 signal.
+  alternates: { canonical: null },
 }
 
 export default function NotFound() {

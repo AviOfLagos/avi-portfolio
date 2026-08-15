@@ -14,6 +14,7 @@ export const metadata: Metadata = {
     title: 'Work',
     description: 'Selected product work, AI platforms, marketplaces and studio builds.',
     url: '/work',
+    images: ['/opengraph-image.png'],
   },
 }
 

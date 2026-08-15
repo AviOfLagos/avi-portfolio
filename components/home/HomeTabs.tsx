@@ -125,7 +125,7 @@ function Row({ item }: { item: TeaserItem }) {
         slug={item.key}
         color={item.color ?? '#c8ff3e'}
         src={item.image}
-        alt=""
+        alt={item.image ? `${item.title} preview` : ''}
         width={112}
         height={72}
         sizes="112px"

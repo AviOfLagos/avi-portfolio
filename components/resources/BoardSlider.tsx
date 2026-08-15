@@ -110,7 +110,7 @@ export function BoardSlider({ board }: { board: PinBoard }) {
                 <Image
                   className="board__img"
                   src={pin.imageLarge ?? pin.image}
-                  alt=""
+                  alt={pin.title ? pin.title : `Design reference from ${board.title}`}
                   width={240}
                   height={320}
                   sizes="(min-width: 900px) 240px, 45vw"

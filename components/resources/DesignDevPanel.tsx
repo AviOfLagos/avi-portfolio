@@ -115,7 +115,14 @@ export function DesignDevPanel({
           <>
             <span className="md__thumb" aria-hidden="true">
               {r.image ? (
-                <Image src={r.image} alt="" width={72} height={54} sizes="72px" className="md__thumb-img" />
+                <Image
+                  src={r.image}
+                  alt={`${r.title} preview`}
+                  width={72}
+                  height={54}
+                  sizes="72px"
+                  className="md__thumb-img"
+                />
               ) : (
                 <Cover slug={r.id} color="#c8ff3e" width={72} height={54} sizes="72px" />
               )}

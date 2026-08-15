@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   title: 'About',
   description: PERSON.summary,
   alternates: { canonical: '/about' },
-  openGraph: { title: `About ${PERSON.name}`, description: PERSON.summary, url: '/about', type: 'profile' },
+  openGraph: { title: `About ${PERSON.name}`, description: PERSON.summary, url: '/about', type: 'profile', images: ['/opengraph-image.png'] },
 }
 
 export default function AboutPage() {

@@ -27,7 +27,7 @@ function VentureRow({ venture, index }: { venture: Venture; index: number }) {
           color={venture.color}
           glyph={venture.glyph}
           src={venture.cover}
-          alt=""
+          alt={venture.cover ? `${venture.name}, ${venture.oneLiner}` : ''}
           width={128}
           height={80}
           sizes="128px"

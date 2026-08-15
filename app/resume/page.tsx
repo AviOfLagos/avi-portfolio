@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     description: `${PERSON.title} and ${PERSON.secondaryTitle}. ${PERSON.location}.`,
     url: '/resume',
     type: 'profile',
+    images: ['/opengraph-image.png'],
   },
 }
 

@@ -25,8 +25,9 @@ const AI_AGENTS = [
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: '*', allow: '/' },
-      ...AI_AGENTS.map((userAgent) => ({ userAgent, allow: '/' })),
+      // The API surface has nothing to index and costs crawl budget.
+      { userAgent: '*', allow: '/', disallow: ['/api/'] },
+      ...AI_AGENTS.map((userAgent) => ({ userAgent, allow: '/', disallow: ['/api/'] })),
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,
