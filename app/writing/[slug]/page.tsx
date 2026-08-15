@@ -1,8 +1,11 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { Figure } from '@/components/Figure'
 import { notFound } from 'next/navigation'
 import { POSTS } from '@/lib/posts'
+import { PERSON } from '@/lib/content'
 import { Reveal, FadeUp } from '@/components/motion-primitives'
+import { ArticleLd, BreadcrumbLd } from '@/components/StructuredData'
 
 export function generateStaticParams() {
   return POSTS.map((p) => ({ slug: p.slug }))
@@ -16,7 +19,20 @@ export async function generateMetadata({
   const { slug } = await params
   const p = POSTS.find((x) => x.slug === slug)
   if (!p) return {}
-  return { title: p.title, description: p.excerpt }
+  return {
+    title: p.title,
+    description: p.excerpt,
+    alternates: { canonical: `/writing/${p.slug}` },
+    openGraph: {
+      title: p.title,
+      description: p.excerpt,
+      url: `/writing/${p.slug}`,
+      type: 'article',
+      publishedTime: p.date,
+      authors: [PERSON.name],
+      tags: [p.tag],
+    },
+  }
 }
 
 export default async function Article({ params }: { params: Promise<{ slug: string }> }) {
@@ -29,6 +45,14 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
 
   return (
     <article className="narrow article" style={{ paddingBottom: '4rem' }}>
+      <ArticleLd title={p.title} description={p.excerpt} slug={p.slug} date={p.date} />
+      <BreadcrumbLd
+        trail={[
+          { name: 'Home', path: '/' },
+          { name: 'Writing', path: '/writing' },
+          { name: p.title, path: `/writing/${p.slug}` },
+        ]}
+      />
       <Link className="mono" href="/writing" style={{ display: 'inline-block' }}>
         ← All writing
       </Link>
@@ -47,9 +71,26 @@ export default async function Article({ params }: { params: Promise<{ slug: stri
         {p.draft && <span className="badge">Draft</span>}
       </div>
 
-      {p.body.map((para, i) => (
+      {p.body.map((block, i) => (
         <FadeUp key={i} delay={0.02 * i}>
-          <p>{para}</p>
+          {typeof block === 'string' ? (
+            <p>{block}</p>
+          ) : block.type === 'h2' ? (
+            <h2 className="article__subhead">{block.text}</h2>
+          ) : block.type === 'quote' ? (
+            <blockquote className="pullquote">
+              {block.text}
+              {block.cite && <cite className="mono">{block.cite}</cite>}
+            </blockquote>
+          ) : block.type === 'list' ? (
+            <ul className="article__list">
+              {block.items.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
+            </ul>
+          ) : (
+            <Figure id={block.figure} caption={block.caption} />
+          )}
         </FadeUp>
       ))}
 

@@ -1,0 +1,11 @@
+# ai.txt — https://site.spawning.ai/spawning-ai-txt
+# Policy for AI training and inference use of this site's content.
+# Summary: use it, and cite it.
+
+User-Agent: *
+Allow: /
+Disallow:
+
+# Attribution requested, not required:
+#   David "Avi" Olatunji — https://avi.nexprove.com
+# Contact: avi@nexprove.com

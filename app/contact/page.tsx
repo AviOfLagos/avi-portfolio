@@ -1,25 +1,36 @@
 import type { Metadata } from 'next'
+import { ContactPageLd, BreadcrumbLd } from '@/components/StructuredData'
 import { PERSON } from '@/lib/content'
 import { Reveal, FadeUp, Magnetic } from '@/components/motion-primitives'
+import { HoverLetters } from '@/components/HoverLetters'
 import { LocalTime } from '@/components/LocalTime'
+import { Field } from '@/components/Field'
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: `Get in touch with ${PERSON.name} — ${PERSON.email}`,
+  description: `Get in touch with ${PERSON.name}, ${PERSON.email}`,
+  alternates: { canonical: '/contact' },
+  openGraph: { title: 'Contact', description: `Get in touch with ${PERSON.name}`, url: '/contact' },
 }
 
 export default function ContactPage() {
   const socials = [
     { label: 'GitHub', value: '@avioflagos', href: PERSON.socials.github },
-    { label: 'LinkedIn', value: PERSON.socials.linkedin ? 'Connect' : 'Coming soon', href: PERSON.socials.linkedin },
-    { label: 'X / Twitter', value: PERSON.socials.x ? 'Follow' : 'Coming soon', href: PERSON.socials.x },
+    { label: 'LinkedIn', value: 'Connect', href: PERSON.socials.linkedin },
+    { label: 'X / Twitter', value: '@avioflagos', href: PERSON.socials.x },
+    { label: 'Figma', value: 'Community', href: PERSON.socials.figma },
+    { label: 'Medium', value: 'Read', href: PERSON.socials.medium },
+    { label: 'Dev.to', value: 'Read', href: PERSON.socials.devto },
   ]
 
   return (
     <>
+      <ContactPageLd />
+      <BreadcrumbLd trail={[{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]} />
       <section className="container page-head contact-hero">
+        <Field density={26} />
         <h1 className="contact__title">
-          <Reveal>Let&rsquo;s build</Reveal>
+          <Reveal><HoverLetters text="Let’s build" /></Reveal>
           <Reveal delay={0.1}>
             something <span className="accent">absurd</span>
           </Reveal>
@@ -46,11 +57,12 @@ export default function ContactPage() {
               </svg>
             </a>
           </Magnetic>
-          {PERSON.calendly && (
-            <a className="cta-ghost" href={PERSON.calendly} target="_blank" rel="noreferrer">
-              Book a session ↗
-            </a>
-          )}
+          <a className="cta-ghost" href={PERSON.booking.intro.url} target="_blank" rel="noreferrer">
+            {PERSON.booking.intro.label} · {PERSON.booking.intro.duration} ↗
+          </a>
+          <a className="cta-ghost" href={PERSON.booking.consult.url} target="_blank" rel="noreferrer">
+            {PERSON.booking.consult.label} ↗
+          </a>
         </div>
 
         <FadeUp delay={0.1}>

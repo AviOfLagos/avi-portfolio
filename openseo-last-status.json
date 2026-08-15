@@ -1,0 +1,38 @@
+{
+  "result": {
+    "_meta": {
+      "organizationId": "delegated-local-admin",
+      "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+      "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "Audit adab0123-e9ae-46cf-9815-97bb6bed1880 (https://deployment-jake-velocity-seattle.trycloudflare.com/): completed — phase completed, 1/1 pages. Call get_audit_issues for the issue report."
+      }
+    ],
+    "structuredContent": {
+      "status": {
+        "id": "adab0123-e9ae-46cf-9815-97bb6bed1880",
+        "startUrl": "https://deployment-jake-velocity-seattle.trycloudflare.com/",
+        "status": "completed",
+        "pagesCrawled": 1,
+        "pagesTotal": 1,
+        "lighthouseTotal": 0,
+        "lighthouseCompleted": 0,
+        "lighthouseFailed": 0,
+        "currentPhase": "completed",
+        "errorCode": null,
+        "startedAt": "2026-08-14 16:12:24",
+        "completedAt": "2026-08-14T16:12:25.742Z"
+      },
+      "meta": {
+        "organizationId": "delegated-local-admin",
+        "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+        "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+      }
+    }
+  },
+  "jsonrpc": "2.0",
+  "id": 1786730064647
+}

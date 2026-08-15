@@ -1,0 +1,133 @@
+{
+  "run": {
+    "result": {
+      "_meta": {
+        "organizationId": "delegated-local-admin",
+        "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+        "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Audit adab0123-e9ae-46cf-9815-97bb6bed1880 started for https://deployment-jake-velocity-seattle.trycloudflare.com. Poll get_audit_status until it finishes, then call get_audit_issues for the prioritized issue report (even a failed audit keeps results for every page it crawled)."
+        }
+      ],
+      "structuredContent": {
+        "auditId": "adab0123-e9ae-46cf-9815-97bb6bed1880",
+        "meta": {
+          "organizationId": "delegated-local-admin",
+          "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+          "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+        }
+      }
+    },
+    "jsonrpc": "2.0",
+    "id": 1786723942558
+  },
+  "status": {
+    "result": {
+      "_meta": {
+        "organizationId": "delegated-local-admin",
+        "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+        "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Audit adab0123-e9ae-46cf-9815-97bb6bed1880 (https://deployment-jake-velocity-seattle.trycloudflare.com/): completed — phase completed, 1/1 pages. Call get_audit_issues for the issue report."
+        }
+      ],
+      "structuredContent": {
+        "status": {
+          "id": "adab0123-e9ae-46cf-9815-97bb6bed1880",
+          "startUrl": "https://deployment-jake-velocity-seattle.trycloudflare.com/",
+          "status": "completed",
+          "pagesCrawled": 1,
+          "pagesTotal": 1,
+          "lighthouseTotal": 0,
+          "lighthouseCompleted": 0,
+          "lighthouseFailed": 0,
+          "currentPhase": "completed",
+          "errorCode": null,
+          "startedAt": "2026-08-14 16:12:24",
+          "completedAt": "2026-08-14T16:12:25.742Z"
+        },
+        "meta": {
+          "organizationId": "delegated-local-admin",
+          "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+          "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+        }
+      }
+    },
+    "jsonrpc": "2.0",
+    "id": 1786730075025
+  },
+  "pages": {
+    "result": {
+      "_meta": {
+        "organizationId": "delegated-local-admin",
+        "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+        "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "Audit adab0123-e9ae-46cf-9815-97bb6bed1880: 1 pages.\n- 0 https://deployment-jake-velocity-seattle.trycloudflare.com/ [error]  \"\"\nFull rows are in structuredContent.pages."
+        }
+      ],
+      "structuredContent": {
+        "pages": [
+          {
+            "id": "53830ff0fe29c96846ecbccf3160b53144c9",
+            "url": "https://deployment-jake-velocity-seattle.trycloudflare.com/",
+            "statusCode": 0,
+            "fetchClass": "error",
+            "redirectUrl": null,
+            "title": "",
+            "metaDescription": "",
+            "wordCount": 0,
+            "isIndexable": false,
+            "crawlDepth": 0,
+            "inSitemap": false,
+            "internalLinkCount": 0,
+            "responseTimeMs": 9
+          }
+        ],
+        "total": 1,
+        "meta": {
+          "organizationId": "delegated-local-admin",
+          "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+          "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+        }
+      }
+    },
+    "jsonrpc": "2.0",
+    "id": 1786730074742
+  },
+  "issues": {
+    "result": {
+      "_meta": {
+        "organizationId": "delegated-local-admin",
+        "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+        "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+      },
+      "content": [
+        {
+          "type": "text",
+          "text": "No issues recorded for audit adab0123-e9ae-46cf-9815-97bb6bed1880. Note: audits run before issue checks existed have no issue data — re-run the audit with run_site_audit to get a real report."
+        }
+      ],
+      "structuredContent": {
+        "summary": [],
+        "issues": [],
+        "meta": {
+          "organizationId": "delegated-local-admin",
+          "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+          "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+        }
+      }
+    },
+    "jsonrpc": "2.0",
+    "id": 1786730074887
+  }
+}

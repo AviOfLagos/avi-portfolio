@@ -4,8 +4,11 @@ const nextConfig: NextConfig = {
   // package-lock.json above the repo root would otherwise be picked as the workspace root.
   turbopack: { root: __dirname },
   poweredByHeader: false,
-  experimental: {
-    optimizePackageImports: ["motion"],
+  images: {
+    // Every image is local, so only the served formats and breakpoints matter.
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 828, 1080, 1280, 1440, 1920],
+    imageSizes: [72, 112, 128, 256, 340],
   },
   async headers() {
     return [

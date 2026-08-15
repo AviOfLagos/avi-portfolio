@@ -1,31 +1,50 @@
 import type { Metadata } from 'next'
+import { ProfilePageLd, BreadcrumbLd } from '@/components/StructuredData'
 import Link from 'next/link'
+import Image from 'next/image'
 import { PERSON, EXPERIENCE, SKILLS, EDUCATION, CERTIFICATIONS, STATS } from '@/lib/content'
 import { Reveal, FadeUp, StatValue, Magnetic } from '@/components/motion-primitives'
+import { HoverLetters } from '@/components/HoverLetters'
 
 export const metadata: Metadata = {
   title: 'About',
   description: PERSON.summary,
+  alternates: { canonical: '/about' },
+  openGraph: { title: `About ${PERSON.name}`, description: PERSON.summary, url: '/about', type: 'profile' },
 }
 
 export default function AboutPage() {
   return (
     <>
+      <ProfilePageLd />
+      <BreadcrumbLd trail={[{ name: 'Home', path: '/' }, { name: 'About', path: '/about' }]} />
       <section className="container page-head">
         <h1 className="page-head__title">
-          <Reveal>About</Reveal>
+          <Reveal><HoverLetters text="About" /></Reveal>
         </h1>
         <p className="page-head__lede">{PERSON.summary}</p>
       </section>
 
-      <section className="section--tight container">
+      <section className="section--tight container about-grid">
+        <figure className="portrait">
+          <Image
+            src={PERSON.portrait}
+            alt={`${PERSON.name}, photographed in Lagos`}
+            width={682}
+            height={1024}
+            sizes="(max-width: 900px) 100vw, 340px"
+            priority
+          />
+          <figcaption className="mono">{PERSON.location}</figcaption>
+        </figure>
+
         <div className="prose" style={{ maxWidth: '68ch' }}>
           <FadeUp>
             <p>
               I&rsquo;m a product owner and technical product manager based in Lagos, working with
-              teams across Toronto, New York and Berlin. My background is split down the middle —
-              electrical engineering, then computer science, then four years of shipping products —
-              and that split is basically the job description.
+              teams across Toronto, New York and Berlin. My background is split down the middle:
+              electrical engineering, then computer science, then four years of shipping products.
+              That split is basically the job description.
             </p>
           </FadeUp>
           <FadeUp delay={0.06}>
@@ -40,7 +59,7 @@ export default function AboutPage() {
             <p>
               Most of my recent work is AI products: an orchestration platform for marketing teams, a
               registry that lets agents install new capabilities, a voice AI that runs first-round
-              interviews. Before that, marketplaces — real estate, then solar. The thread is the
+              interviews. Before that, marketplaces, real estate, then solar. The thread is the
               same: take something people currently do with spreadsheets, phone calls and hope, and
               make it a product.
             </p>
@@ -153,7 +172,7 @@ export default function AboutPage() {
 
       <section className="section container contact-hero">
         <h2 className="contact__title">
-          <Reveal>Work with me</Reveal>
+          <Reveal><HoverLetters text="Work with me" /></Reveal>
         </h2>
         <div style={{ marginTop: '2.5rem', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
           <Magnetic strength={0.45}>

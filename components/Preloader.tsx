@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { PERSON } from '@/lib/content'
+import { prefersReducedMotion } from '@/lib/use-in-view'
 
 const COUNT_MS = 550
 const EXIT_MS = 550
@@ -11,6 +12,10 @@ export function Preloader({ onDone }: { onDone: () => void }) {
   const [exiting, setExiting] = useState(false)
 
   useEffect(() => {
+    if (prefersReducedMotion()) {
+      onDone()
+      return
+    }
     let raf = 0
     let start = 0
     let exitTimer: ReturnType<typeof setTimeout>
@@ -31,16 +36,21 @@ export function Preloader({ onDone }: { onDone: () => void }) {
     }
     raf = requestAnimationFrame(step)
 
+    // rAF is throttled in a background tab, so a visitor who switches away during
+    // load would come back to a frozen counter. Hard-stop regardless of frames.
+    const failsafe = setTimeout(onDone, COUNT_MS + EXIT_MS + 900)
+
     return () => {
       cancelAnimationFrame(raf)
       clearTimeout(exitTimer)
       clearTimeout(doneTimer)
+      clearTimeout(failsafe)
     }
   }, [onDone])
 
   return (
     <div className={`preloader ${exiting ? 'preloader--out' : ''}`}>
-      <span className="mono">{PERSON.name} — Portfolio &rsquo;26</span>
+      <span className="mono">{PERSON.name}, Portfolio &rsquo;26</span>
       <span className="preloader__count">{count}%</span>
     </div>
   )

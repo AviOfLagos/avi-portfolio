@@ -18,6 +18,9 @@ const NAV_LINKS = [
   { href: '/contact', label: 'Contact' },
 ]
 
+// Sits apart from the nav links: it is the action, not another destination.
+const RESUME_LINK = { href: '/resume', label: 'Résumé' }
+
 const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -139,6 +142,8 @@ export function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [paletteOpen, setPaletteOpen] = useState(false)
   const [paletteMounted, setPaletteMounted] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const burgerRef = useRef<HTMLButtonElement>(null)
 
   const openPalette = () => {
     setPaletteMounted(true)
@@ -164,6 +169,25 @@ export function Nav() {
 
   useEffect(() => setMenuOpen(false), [pathname])
 
+  // The overlay covers the page, so lock the scroll behind it and let Escape out.
+  useEffect(() => {
+    if (!menuOpen) return
+    const { overflow } = document.body.style
+    document.body.style.overflow = 'hidden'
+    menuRef.current?.querySelector('a')?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false)
+        burgerRef.current?.focus()
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      document.body.style.overflow = overflow
+    }
+  }, [menuOpen])
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -179,7 +203,7 @@ export function Nav() {
   return (
     <>
       <nav className={`nav ${scrolled ? 'nav--scrolled' : ''}`}>
-        <Link className="nav__logo" href="/" aria-label={`${PERSON.name} — home`}>
+        <Link className="nav__logo" href="/" aria-label={`${PERSON.name}, home`}>
           <LogoMark size={26} />
           <LogoWordmark height={17} />
         </Link>
@@ -194,6 +218,9 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
+          <Link className="nav__cta" href={RESUME_LINK.href} data-active={pathname.startsWith(RESUME_LINK.href)}>
+            {RESUME_LINK.label}
+          </Link>
           <button
             className="nav__kbd"
             onClick={openPalette}
@@ -203,9 +230,12 @@ export function Nav() {
             ⌘K
           </button>
           <button
+            ref={burgerRef}
             className="nav__burger"
             onClick={() => setMenuOpen((o) => !o)}
-            aria-label="Toggle menu"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-menu"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
               {menuOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M3 8h18M3 16h18" />}
@@ -215,7 +245,7 @@ export function Nav() {
       </nav>
 
       {menuOpen && (
-        <div className="mobile-menu">
+        <div className="mobile-menu" id="mobile-menu" ref={menuRef}>
           {NAV_LINKS.map((l, i) => (
             <div
               key={l.href}

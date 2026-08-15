@@ -17,5 +17,5 @@ export function LocalTime() {
     const id = setInterval(tick, 1000)
     return () => clearInterval(id)
   }, [])
-  return <span className="mono">Lagos — {time} WAT</span>
+  return <span className="mono">Lagos, {time} WAT</span>
 }

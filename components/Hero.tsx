@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { PERSON } from '@/lib/content'
 import { Preloader } from './Preloader'
+import { Field } from './Field'
 
 export function Hero() {
   const [loading, setLoading] = useState(true)
@@ -37,6 +38,7 @@ export function Hero() {
       {loading && <Preloader onDone={done} />}
 
       <header className={`hero container ${started ? 'hero--started' : ''}`} id="top">
+        <Field />
         <div className="hero__eyebrow hero__fade" style={{ '--d': '0.9s' } as React.CSSProperties}>
           <span className="dot" />
           <span className="mono">
@@ -70,7 +72,7 @@ export function Hero() {
             className="hero__tagline hero__fade"
             style={{ '--d': '1.1s', '--fade-y': '24px' } as React.CSSProperties}
           >
-            I turn fuzzy ideas into <strong>products people actually use</strong> — and run the
+            I turn fuzzy ideas into <strong>products people actually use</strong>, and run the
             teams that ship them. Currently: an AI marketing OS, an agent registry, and Nigeria&rsquo;s
             first verified solar marketplace.
           </p>

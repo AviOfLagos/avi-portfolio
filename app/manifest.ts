@@ -3,7 +3,7 @@ import { PERSON } from '@/lib/content'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: `${PERSON.name} — ${PERSON.title}`,
+    name: `${PERSON.name}, ${PERSON.title}`,
     short_name: 'Avi',
     description: PERSON.summary,
     start_url: '/',

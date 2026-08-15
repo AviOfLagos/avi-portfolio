@@ -1,8 +1,12 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
+import { Cover } from '@/components/Cover'
+import { Outcome } from '@/components/Outcome'
 import { notFound } from 'next/navigation'
 import { VENTURES } from '@/lib/content'
 import { Reveal, FadeUp } from '@/components/motion-primitives'
+import { CaseStudyLd, BreadcrumbLd } from '@/components/StructuredData'
 
 export function generateStaticParams() {
   return VENTURES.map((v) => ({ slug: v.slug }))
@@ -16,7 +20,18 @@ export async function generateMetadata({
   const { slug } = await params
   const v = VENTURES.find((x) => x.slug === slug)
   if (!v) return {}
-  return { title: v.name, description: v.oneLiner }
+  return {
+    title: v.name,
+    description: v.oneLiner,
+    alternates: { canonical: `/work/${v.slug}` },
+    openGraph: {
+      title: `${v.name}, ${v.tag}`,
+      description: v.desc,
+      url: `/work/${v.slug}`,
+      type: 'article',
+      ...(v.cover ? { images: [{ url: v.cover }] } : {}),
+    },
+  }
 }
 
 export default async function CaseStudy({ params }: { params: Promise<{ slug: string }> }) {
@@ -29,6 +44,14 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
 
   return (
     <>
+      <CaseStudyLd slug={v.slug} />
+      <BreadcrumbLd
+        trail={[
+          { name: 'Home', path: '/' },
+          { name: 'Work', path: '/work' },
+          { name: v.name, path: `/work/${v.slug}` },
+        ]}
+      />
       <section className="container case-hero">
         <Link className="mono" href="/work" style={{ display: 'inline-block', marginBottom: '2rem' }}>
           ← All work
@@ -38,6 +61,19 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
           <Reveal>{v.name}</Reveal>
         </h1>
         <p className="page-head__lede">{v.desc}</p>
+
+        <Cover
+          className="case-hero__media"
+          slug={v.slug}
+          color={v.color}
+          glyph={v.glyph}
+          src={v.cover}
+          alt={v.cover ? `${v.name} product interface` : ''}
+          width={1440}
+          height={900}
+          sizes="(max-width: 900px) 100vw, 1240px"
+          priority
+        />
 
         <div className="case-meta">
           <div className="case-meta__cell">
@@ -49,8 +85,12 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
             <div className="case-meta__value">{v.year}</div>
           </div>
           <div className="case-meta__cell">
-            <div className="mono">Category</div>
-            <div className="case-meta__value">{v.tag}</div>
+            <div className="mono">Platform</div>
+            <div className="case-meta__value">{v.platform}</div>
+          </div>
+          <div className="case-meta__cell">
+            <div className="mono">Niche</div>
+            <div className="case-meta__value">{v.niche}</div>
           </div>
           <div className="case-meta__cell">
             <div className="mono">Live</div>
@@ -89,16 +129,33 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
             <h2>Where it landed</h2>
             <div className="outcomes">
               {v.outcomes.map((o) => (
-                <div className="outcome" key={o.label} style={{ borderLeftColor: v.color }}>
-                  <div className="outcome__value" style={{ color: v.color }}>
-                    {o.value}
-                  </div>
-                  <div className="outcome__label">{o.label}</div>
-                </div>
+                <Outcome key={o.label} value={o.value} label={o.label} color={v.color} />
               ))}
             </div>
           </div>
         </FadeUp>
+
+        {v.gallery && v.gallery.length > 0 && (
+          <FadeUp>
+            <div className="case-section">
+              <h2>Inside the product</h2>
+              <div className="shots">
+                {v.gallery.map((shot) => (
+                  <figure className="shot" key={shot.src}>
+                    <Image
+                      src={shot.src}
+                      alt={`${v.name} — ${shot.caption}`}
+                      width={1440}
+                      height={900}
+                      sizes="(max-width: 760px) 100vw, 50vw"
+                    />
+                    <figcaption className="mono">{shot.caption}</figcaption>
+                  </figure>
+                ))}
+              </div>
+            </div>
+          </FadeUp>
+        )}
 
         <FadeUp>
           <div className="case-section">

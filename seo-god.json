@@ -1,10 +1,10 @@
 {
   "version": 1,
   "site_url": "https://deployment-jake-velocity-seattle.trycloudflare.com",
-  "openseo": { "url": "http://127.0.0.1:3001", "status": "not_installed" },
+  "openseo": { "url": "http://127.0.0.1:3001", "status": "running" },
   "gsc": { "connected": false },
   "phases": {
-    "setup": "in_progress",
+    "setup": "done",
     "audit": "pending",
     "measure": "pending",
     "ai_visibility": "pending",
