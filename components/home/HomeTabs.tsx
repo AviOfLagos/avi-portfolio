@@ -5,7 +5,6 @@ import { useRef, useState } from 'react'
 import { Cover } from '@/components/Cover'
 import { FadeUp } from '@/components/motion-primitives'
 import { HoverLetters } from '@/components/HoverLetters'
-import './home-tabs.css'
 
 export type TeaserItem = {
   key: string

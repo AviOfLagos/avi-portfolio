@@ -1,15 +1,42 @@
+/* ============================================================================
+   DESIGN SYSTEM
+   Tokens first, then base, then components, then utilities, then print.
+   Every colour, radius and duration below is referenced by name — if you find
+   yourself typing a literal further down the file, add a token instead.
+   ============================================================================ */
+
 :root {
+  /* --- surface + ink ------------------------------------------------------ */
   --bg: #0a0a0c;
   --bg-soft: #121216;
   --ink: #f2f2ef;
+  /* Body copy on a dark ground. Was written as var(--ink-dim) in six places. */
+  --ink-dim: var(--ink-dim);
   --muted: #8b8b93;
   --accent: #c8ff3e;
+  --accent-ink: #0a0a0c;
   --line: rgba(242, 242, 239, 0.1);
   --line-strong: rgba(242, 242, 239, 0.22);
+
+  /* --- type --------------------------------------------------------------- */
   --font-display: var(--font-display-face), system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, monospace;
+
+  /* --- geometry ----------------------------------------------------------- */
   --nav-h: 76px;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 20px;
+
+  /* --- motion ------------------------------------------------------------- */
+  /* Shared so a timing change lands everywhere at once. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --dur-fast: 0.2s;
+  --dur: 0.25s;
+  --dur-slow: 0.7s;
 }
+
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -221,6 +248,16 @@ button { font-family: inherit; }
 /* The nickname hiding inside the full name. Colour only: the reveal animation
    and hover behaviour are untouched. */
 .hero__letter--nick, .hero__letter--nick > span { color: var(--accent); }
+
+/* Everything that is not the nickname sits back at half strength, so AVI reads
+   first and the full name is still there for anyone who looks. Hover brings a
+   letter back to full — the play stays available, it is just quieter at rest. */
+.hero__letter:not(.hero__letter--nick) {
+  opacity: 0.5;
+  transition: transform 0.85s var(--ease-out), opacity var(--dur) ease;
+  transition-delay: calc(0.15s + var(--i) * 0.04s), 0s;
+}
+.hero__letter:not(.hero__letter--nick):hover { opacity: 1; }
 
 .hero__eyebrow { display: flex; gap: 0.8rem; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
 .hero__eyebrow .dot {
@@ -526,7 +563,7 @@ button { font-family: inherit; }
 .timeline__title { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
 .timeline__points { list-style: none; display: flex; flex-direction: column; gap: 0.7rem; }
 .timeline__points li {
-  position: relative; padding-left: 1.3rem; color: #b9b9b3;
+  position: relative; padding-left: 1.3rem; color: var(--ink-dim);
   line-height: 1.65; font-size: 0.98rem;
 }
 .timeline__points li::before {
@@ -704,7 +741,7 @@ button { font-family: inherit; }
 }
 .footer__nav { display: flex; gap: 2.5rem; flex-wrap: wrap; }
 .footer__col { display: flex; flex-direction: column; gap: 0.7rem; }
-.footer__col a { color: #b9b9b3; font-size: 0.95rem; transition: color 0.25s; }
+.footer__col a { color: var(--ink-dim); font-size: 0.95rem; transition: color 0.25s; }
 .footer__col a:hover { color: var(--accent); }
 .footer__brand { display: flex; align-items: center; gap: 0.7rem; }
 .footer__brand svg { display: block; }
@@ -876,13 +913,13 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
 .resume__role-period { white-space: nowrap; }
 .resume__role-meta { margin-top: 0.3rem; }
 .resume__points { margin: 1rem 0 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.6rem; }
-.resume__points li { color: #b9b9b3; line-height: 1.65; }
+.resume__points li { color: var(--ink-dim); line-height: 1.65; }
 .resume__list { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.6rem; }
-.resume__list li { color: #b9b9b3; line-height: 1.6; }
+.resume__list li { color: var(--ink-dim); line-height: 1.6; }
 .resume__list a:hover { color: var(--accent); }
 .resume__skills { display: flex; flex-direction: column; gap: 1.1rem; margin: 0; }
 .resume__skills dt { margin-bottom: 0.35rem; }
-.resume__skills dd { margin: 0; color: #b9b9b3; line-height: 1.6; }
+.resume__skills dd { margin: 0; color: var(--ink-dim); line-height: 1.6; }
 
 /* Résumé call to action in the nav. */
 .nav__cta {
@@ -911,20 +948,20 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
 .footer__lead {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  /* The booking column reads as centred against the display word, not hung
+     off its baseline. */
+  align-items: center;
   gap: 2.5rem;
   flex-wrap: wrap;
 }
-/* Display word and booking column share the top row; the identity lines run
-   full width underneath both. */
-.footer__lead > .footer__big { flex: 1 1 auto; order: 1; }
-.footer__lead > .footer__pitch { order: 2; align-items: flex-end; text-align: right; }
-.footer__lead > .footer__identity { order: 3; flex-basis: 100%; }
+/* The lead row is only the display word and the booking column now; the
+   identity lines sit below the rule. */
+.footer__lead > .footer__big { flex: 1 1 auto; margin-bottom: 0; }
+.footer__lead > .footer__pitch { align-items: flex-end; text-align: right; }
 .footer__identity {
   display: flex;
   flex-direction: column;
   gap: 0.55rem;
-  margin-top: 1.1rem;
   /* Hold both lines unbroken while the viewport can take them, then wrap
      normally rather than overflowing. */
   max-width: 100%;
@@ -947,7 +984,6 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
   flex-direction: column;
   align-items: flex-start;
   gap: 0.9rem;
-  padding-bottom: 0.5rem;
 }
 /* Stacked layout: the booking column goes back to the left edge. */
 @media (max-width: 780px) {
@@ -956,6 +992,8 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
 .footer__email { color: var(--muted); transition: color 0.25s ease; }
 .footer__email:hover { color: var(--accent); }
 .footer__rule { border: 0; border-top: 1px solid var(--line); margin: 2.5rem 0; }
+/* Between the identity lines and the link columns: closer than the first. */
+.footer__rule--tight { margin: 2rem 0 2.6rem; }
 
 /* Wider gutters between the link groups. */
 /* Roomier gutters and taller rows: these columns were reading as one block. */
@@ -983,7 +1021,7 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
   grid-template-columns: 20px auto;
   align-items: center;
   column-gap: 0.7rem;
-  color: #b9b9b3;
+  color: var(--ink-dim);
   transition: color 0.25s ease;
 }
 .social-link__icon { display: grid; place-items: center; color: var(--muted); transition: color 0.25s ease; }
@@ -1149,4 +1187,1336 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
 }
 @media (prefers-reduced-motion: reduce) {
   .modal-overlay, .modal { animation: none; }
+}
+
+
+/* ============================================================================
+   AMBIENT FIELD
+   Merged from components/field.css
+   ============================================================================ */
+
+/*
+ * Ambient field, mounted once in the root layout.
+ *
+ * Kept out of globals.css on purpose: it is owned by <Field> and imported by it.
+ * The canvas is fixed to the viewport and painted behind everything; the page
+ * chrome is lifted into its own stacking level so text never sits under it.
+ */
+.field--ambient {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  /* Held back so it reads as texture behind body copy, not as a foreground layer. */
+  opacity: 0.8;
+  /* Same edge fade as the old per-page instance, retuned for a full viewport. */
+  mask-image: radial-gradient(120% 90% at 50% 40%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 40%, #000 30%, transparent 100%);
+}
+
+/* Content sits above the field. Nav (100), progress (120), cursor, overlays and
+ * the rest of the chrome already carry their own higher z-index. */
+body > #main,
+body > .footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Reduced motion: the loop never starts, and we also drop the field back so a
+ * frozen frame reads as texture rather than a static overlay. */
+@media (prefers-reduced-motion: reduce) {
+  .field--ambient {
+    opacity: 0.4;
+  }
+}
+
+
+/* ============================================================================
+   TOOLKIT CHIPS
+   Merged from components/toolkit.css
+   ============================================================================ */
+
+/* Logo chips. The mark is a local SVG in public/icons painted as a CSS mask so
+   it takes currentColor — including the accent colour on chip hover — instead
+   of shipping a second, differently coloured asset. */
+
+.chip--mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.chip__mark {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  background: currentColor;
+  -webkit-mask: var(--mark) center / contain no-repeat;
+  mask: var(--mark) center / contain no-repeat;
+}
+
+
+/* ============================================================================
+   CERTIFICATIONS
+   Merged from components/certifications.css
+   ============================================================================ */
+
+/* Certification triggers. Buttons, not divs, so keyboard and screen readers
+   get the affordance for free. Styles for the dialog itself live in
+   globals.css under .modal*. */
+
+.certs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.cert {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.2rem 1rem;
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.cert:hover,
+.cert:focus-visible {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.cert__name {
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.cert__issuer {
+  grid-column: 1;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.cert__hint {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.cert:hover .cert__hint,
+.cert:focus-visible .cert__hint {
+  color: var(--accent);
+}
+
+/* Résumé column: flatter, denser, no card chrome. */
+.certs--list {
+  gap: 0.2rem;
+}
+
+.certs--list .cert {
+  border: 0;
+  border-radius: 0;
+  padding: 0.35rem 0;
+}
+
+.certs--list .cert:hover,
+.certs--list .cert:focus-visible {
+  transform: none;
+  color: var(--accent);
+}
+
+.cert__image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cert {
+    transition: none;
+  }
+  .cert:hover,
+  .cert:focus-visible {
+    transform: none;
+  }
+}
+
+
+/* ============================================================================
+   HOME — RESOURCES TEASER TABS
+   Merged from components/home/home-tabs.css
+   ============================================================================ */
+
+/**
+ * Scoped to the homepage resources teaser. Imported only from HomeTabs.tsx, so
+ * it stays out of globals.css. Deliberately echoes the /resources tab bar
+ * (.rtabs) without sharing class names — the two live in different bundles and
+ * the teaser is a compact variant, not the same component.
+ */
+
+.htabs__list {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--line);
+  margin-top: 0.5rem;
+}
+
+.htabs__list::-webkit-scrollbar {
+  display: none;
+}
+
+.htabs__tab {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.55rem;
+  flex: none;
+  padding: 0.7rem 0.95rem;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.htabs__tab:hover {
+  color: var(--ink);
+}
+
+.htabs__tab.is-selected {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+.htabs__num {
+  font-size: 0.68rem;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.htabs__tab.is-selected .htabs__num {
+  color: var(--accent);
+}
+
+.htabs__panel {
+  padding-top: 0.4rem;
+}
+
+.htabs__panel[hidden] {
+  display: none;
+}
+
+.htabs__panel:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+
+/* ---------- Rows ---------- */
+
+.htabs__rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.hrow {
+  display: grid;
+  /* thumb | title+excerpt | meta */
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.5rem 1rem;
+  align-items: center;
+  padding: 0.95rem 0.6rem;
+  border-bottom: 1px solid var(--line);
+  border-left: 2px solid transparent;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.18s ease, padding-left 0.18s ease, background 0.18s ease;
+}
+
+.hrow:hover,
+.hrow:focus-visible {
+  border-left-color: var(--accent);
+  padding-left: 0.9rem;
+  background: color-mix(in srgb, var(--ink) 3%, transparent);
+}
+
+.hrow:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.hrow__main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.hrow__title {
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+}
+
+.hrow:hover .hrow__title {
+  color: var(--accent);
+}
+
+.hrow__sub {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.hrow__meta {
+  font-size: 0.68rem;
+  color: var(--muted);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.hrow__ext {
+  margin-left: 0.35em;
+  color: var(--accent);
+}
+
+/* ---------- See-more row ---------- */
+
+.hrow--more {
+  border-bottom: 0;
+  padding-top: 1.1rem;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.hrow--more:hover,
+.hrow--more:focus-visible {
+  color: var(--ink);
+  background: none;
+}
+
+.hrow--more .hrow__arrow {
+  color: var(--accent);
+  display: inline-block;
+  transition: transform 0.18s ease;
+}
+
+.hrow--more:hover .hrow__arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .htabs__tab,
+  .hrow,
+  .hrow__arrow {
+    transition: none;
+  }
+  .hrow:hover,
+  .hrow:focus-visible {
+    padding-left: 0.6rem;
+  }
+  .hrow--more:hover .hrow__arrow {
+    transform: none;
+  }
+}
+
+/* The see-more row carries no thumbnail; start it in the thumb column so its
+   label lines up with the row images above rather than indenting past them. */
+.hrow--more { grid-template-columns: minmax(0, 1fr) auto; }
+
+/* ---------- Row thumbnails ----------
+   Every row gets a cover: a real thumbnail where the source has one, otherwise
+   the generated <Cover>, so the column edge stays straight and no row waits on
+   an asset hand-off. */
+.hrow__thumb {
+  flex: none;
+  width: 112px;
+  height: 72px;
+  border-radius: 6px;
+  overflow: hidden;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  background: var(--bg-soft);
+}
+.hrow:hover .hrow__thumb,
+.hrow:focus-visible .hrow__thumb {
+  border-color: var(--line-strong);
+}
+@media (max-width: 620px) {
+  .hrow__thumb { width: 76px; height: 52px; }
+}
+
+
+/* ============================================================================
+   RESOURCES HUB
+   Merged from app/resources/resources.css
+   ============================================================================ */
+
+/**
+ * Scoped to /resources. Nothing here is imported anywhere else, so it stays out
+ * of globals.css and cannot collide with the rest of the site's classes.
+ */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.resources {
+  padding-bottom: clamp(3rem, 8vh, 6rem);
+}
+
+/* ---------- Tab bar ---------- */
+
+.rtabs {
+  position: sticky;
+  top: var(--nav-h);
+  z-index: 5;
+  margin-bottom: 2rem;
+  background: linear-gradient(to bottom, var(--bg) 65%, transparent);
+  padding-block: 0.75rem 1.1rem;
+}
+
+.rtabs__list {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.rtabs__list::-webkit-scrollbar {
+  display: none;
+}
+
+.rtabs__tab {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex: none;
+  padding: 0.85rem 1.1rem;
+  background: none;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  color: var(--muted);
+  font: inherit;
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.rtabs__tab:hover {
+  color: var(--ink);
+}
+
+.rtabs__tab.is-selected {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+.rtabs__num {
+  font-size: 0.7rem;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+
+.rtabs__tab.is-selected .rtabs__num {
+  color: var(--accent);
+}
+
+/* Panels are near-full-screen so a tab feels like a place, not a section. */
+.rtabs__panel {
+  min-height: calc(100svh - var(--nav-h) - 8rem);
+}
+
+.rtabs__panel:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 6px;
+}
+
+.rtabs__panel[hidden] {
+  display: none;
+}
+
+/* ---------- Panel chrome ---------- */
+
+.rpanel__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.rpanel__head--spaced {
+  margin-top: 4rem;
+}
+
+.rpanel__title {
+  font-size: clamp(1.3rem, 2.6vw, 1.9rem);
+  letter-spacing: -0.02em;
+}
+
+.rpanel__lede {
+  color: var(--muted);
+  margin-top: 0.9rem;
+  max-width: 62ch;
+  font-size: 0.95rem;
+}
+
+.rpanel__leaving {
+  margin-top: 0.5rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.ext-arrow {
+  display: inline-block;
+  margin-left: 0.35em;
+  color: var(--accent);
+  transform: translateY(-0.05em);
+}
+
+.post-row--ext .post-row__title {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ---------- Search ---------- */
+
+.rsearch {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-top: 1.4rem;
+}
+
+.rsearch__field {
+  position: relative;
+  flex: 1 1 18rem;
+  max-width: 28rem;
+}
+
+.rsearch__input {
+  width: 100%;
+  padding: 0.55rem 2.2rem 0.55rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  transition: border-color 0.18s ease;
+}
+
+.rsearch__input::placeholder {
+  color: var(--muted);
+}
+
+.rsearch__input:hover {
+  border-color: var(--ink);
+}
+
+.rsearch__input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-color: var(--accent);
+}
+
+/* The UA clear affordance duplicates our own button and is unlabelled. */
+.rsearch__input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.rsearch__clear {
+  position: absolute;
+  top: 50%;
+  right: 0.35rem;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 1.1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.18s ease, background 0.18s ease;
+}
+
+.rsearch__clear:hover {
+  color: var(--ink);
+  background: var(--bg-soft);
+}
+
+.rsearch__clear:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.rsearch__count {
+  color: var(--muted);
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rsearch__input,
+  .rsearch__clear {
+    transition: none;
+  }
+}
+
+/* ---------- Filters ---------- */
+
+.rfilters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1.4rem 0 0.4rem;
+}
+
+.rfilter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+
+.rfilter:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.rfilter.is-on {
+  color: var(--bg);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.rfilter:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.rfilter--reset {
+  margin-top: 0.2rem;
+}
+
+.rfilter .mono {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+/* ---------- Master / detail ---------- */
+
+.md {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.6rem;
+  margin-top: 1.6rem;
+  align-items: start;
+}
+
+@media (min-width: 900px) {
+  .md {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 2.5rem;
+  }
+}
+
+.md__list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.md__list:focus-visible {
+  outline: none;
+}
+
+.md__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.8rem 1rem;
+  align-items: center;
+  padding: 0.95rem 0.9rem;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: background 0.18s ease, border-color 0.18s ease, padding-left 0.18s ease;
+}
+
+/* Rows carrying a thumbnail get a third column in front. */
+.md__row:has(.md__thumb) {
+  grid-template-columns: auto minmax(0, 1fr) auto;
+}
+
+.md__row.is-active {
+  background: rgba(255, 255, 255, 0.03);
+  border-left-color: var(--accent);
+}
+
+.md__row:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.md__row-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.md__row-title {
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+  /* Pinterest titles are whole paragraphs; the detail panel gets the full text. */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.md__row.is-active .md__row-title {
+  color: var(--accent);
+}
+
+.md__row-sub {
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.md__row-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-align: right;
+  white-space: nowrap;
+}
+
+.md__thumb {
+  display: block;
+  width: 72px;
+  height: 54px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg-soft);
+  flex: none;
+}
+
+.md__thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.md__empty {
+  color: var(--muted);
+  padding: 2rem 0.9rem;
+  font-size: 0.9rem;
+}
+
+/* The list-side empty state carries a reset button; the detail side is text. */
+.md__list .md__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.md__empty-text {
+  margin: 0;
+}
+
+/* ---------- Detail ---------- */
+
+.md__detail {
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--bg-soft);
+  padding: clamp(1.2rem, 2.4vw, 1.9rem);
+}
+
+@media (min-width: 900px) {
+  .md__detail {
+    position: sticky;
+    top: calc(var(--nav-h) + 5.5rem);
+    max-height: calc(100svh - var(--nav-h) - 8rem);
+    overflow-y: auto;
+    /* Scrolling over the detail must not chain to the page — otherwise reaching
+       the end of the panel drags the whole list away from where the reader left it. */
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+  }
+  .md__detail::-webkit-scrollbar { width: 8px; }
+  .md__detail::-webkit-scrollbar-thumb {
+    background: var(--line-strong);
+    border-radius: 99px;
+  }
+  .md__detail::-webkit-scrollbar-track { background: transparent; }
+}
+
+.md__detail:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.md__detail-inner {
+  animation: md-in 0.25s ease both;
+}
+
+@keyframes md-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md__detail-inner {
+    animation: none;
+  }
+}
+
+.md__eyebrow {
+  font-size: 0.7rem;
+  color: var(--accent);
+  margin-bottom: 0.6rem;
+}
+
+.md__hero {
+  display: block;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.1rem;
+  background: var(--bg);
+}
+
+.md__hero-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+}
+
+.md__title {
+  font-size: clamp(1.35rem, 2.6vw, 1.9rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+.md__untitled {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.md__tagline {
+  margin-top: 0.6rem;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.md__body {
+  margin-top: 0.7rem;
+  color: var(--muted);
+  font-size: 0.93rem;
+  line-height: 1.7;
+}
+
+.md__label {
+  margin-top: 1.4rem;
+  font-size: 0.68rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.md__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.9rem 1.2rem;
+  margin-top: 1.3rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
+}
+
+.md__facts dt {
+  font-size: 0.66rem;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.md__facts dd {
+  margin-top: 0.3rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.md__chips {
+  margin-top: 0.7rem;
+  list-style: none;
+  padding: 0;
+}
+
+.chip--ghost {
+  opacity: 0.75;
+  font-size: 0.72rem;
+}
+
+.md__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.6rem;
+}
+
+.md__action {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: transform 0.18s ease, opacity 0.18s ease;
+}
+
+.md__action .ext-arrow {
+  color: currentColor;
+}
+
+.md__action:hover {
+  transform: translateY(-2px);
+}
+
+.md__action--ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+}
+
+.md__action--ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+
+/* ---------- Focus the eye: rows recede until hovered or selected ----------
+   The list carries a lot of items; at full strength every row competes with the
+   detail panel. Rows sit back at 30% and come forward on hover, keyboard focus,
+   or when active. Opacity only — text stays selectable and searchable, and
+   nothing shifts position. */
+@media (min-width: 900px) and (hover: hover) {
+  .md__list .md__row {
+    opacity: 0.3;
+    transition: opacity 0.22s ease, background 0.22s ease, border-color 0.22s ease;
+  }
+  .md__list:hover .md__row:hover,
+  .md__list .md__row:focus-visible,
+  .md__list .md__row.is-active {
+    opacity: 1;
+  }
+  /* Before any interaction the active row is already the one being previewed,
+     so it must not be dimmed. */
+  .md__list:not(:hover) .md__row.is-active {
+    opacity: 1;
+  }
+}
+
+/* Never dim on touch or for reduced-motion / low-vision preferences. */
+@media (prefers-reduced-motion: reduce) {
+  .md__list .md__row { opacity: 1 !important; transition: none; }
+}
+
+/* ---------- Pinterest boards ---------- */
+
+.boards {
+  margin-top: clamp(2.5rem, 6vw, 4rem);
+  padding-top: clamp(2rem, 4vw, 3rem);
+  border-top: 1px solid var(--line);
+}
+
+.board {
+  margin-top: 2rem;
+}
+
+.board__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.board__title {
+  margin: 0;
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  font-weight: 500;
+}
+
+.board__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.board__title a:hover {
+  color: var(--accent);
+}
+
+.board__count {
+  flex: none;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* The track is the scroller; the buttons sit over its left and right edges,
+   vertically centred, so they never take horizontal space from the tiles. */
+.board__slider {
+  position: relative;
+}
+
+.board__track {
+  display: flex;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0;
+  scrollbar-width: none;
+}
+
+.board__track::-webkit-scrollbar {
+  display: none;
+}
+
+.board__track:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.board__slide {
+  flex: 0 0 auto;
+  width: 45vw;
+  max-width: 240px;
+  scroll-snap-align: start;
+}
+
+.board__pin,
+.board__all {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg-soft);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.18s ease;
+}
+
+.board__pin:hover,
+.board__all:hover,
+.board__pin:focus-visible,
+.board__all:focus-visible {
+  border-color: var(--accent);
+}
+
+.board__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+
+.board__caption {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  padding: 0.5rem 0.6rem 0.6rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  color: var(--muted);
+}
+
+/* Final slide: the exit to the full board, not a button beside the slider. */
+.board__all {
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  aspect-ratio: 3 / 4;
+  padding: 1rem;
+  text-align: center;
+  border-style: dashed;
+}
+
+.board__all-n {
+  font-size: 1.6rem;
+  color: var(--accent);
+}
+
+.board__all-label {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.board__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  translate: 0 -50%;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--ink);
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
+}
+
+.board__nav--prev {
+  left: -6px;
+}
+
+.board__nav--next {
+  right: -6px;
+}
+
+.board__nav:hover:not(:disabled) {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.board__nav:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.board__nav:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .board__track {
+    /* Belt and braces: the JS already passes behavior:'auto', but any UA that
+       smooth-scrolls the snap itself is stopped here too. */
+    scroll-behavior: auto;
+  }
+
+  .board__pin,
+  .board__all,
+  .board__nav {
+    transition: none;
+  }
+}
+
+
+/* ============================================================================
+   PRINT — RÉSUMÉ
+   Scoped with body:has(.resume-page); this stylesheet is global.
+   Merged from app/resume/resume-print.css
+   ============================================================================ */
+
+/* Print rules for /resume.
+   Next inlines any imported stylesheet globally, so every rule is scoped with
+   body:has(.resume-page) — the marker div only exists on this route. */
+
+.resume-page {
+  display: none;
+}
+
+.resume__contact {
+  margin-top: 1rem;
+  color: var(--muted);
+}
+
+@media print {
+  body:has(.resume-page) {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  /* Screen furniture: none of it survives a page. */
+  body:has(.resume-page) .nav,
+  body:has(.resume-page) .mobile-menu,
+  body:has(.resume-page) .footer,
+  body:has(.resume-page) .field--ambient,
+  body:has(.resume-page) .cursor-glow,
+  body:has(.resume-page) .cursor-dot,
+  body:has(.resume-page) .scroll-progress,
+  body:has(.resume-page) .skip-link,
+  body:has(.resume-page) .resume__actions,
+  body:has(.resume-page) .cert__hint {
+    display: none !important;
+  }
+
+  body:has(.resume-page) main,
+  body:has(.resume-page) .container,
+  body:has(.resume-page) .section,
+  body:has(.resume-page) .section--tight,
+  body:has(.resume-page) .page-head {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    content-visibility: visible !important;
+  }
+
+  /* Everything on screen fades or lifts in; on paper it must simply be there. */
+  body:has(.resume-page) * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+    color: #000 !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  body:has(.resume-page) .page-head__title {
+    font-size: 22pt;
+  }
+
+  body:has(.resume-page) .page-head__lede {
+    display: none !important;
+  }
+
+  body:has(.resume-page) .resume__heading {
+    font-size: 11pt;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+
+  body:has(.resume-page) .resume__block {
+    border-top: 1px solid #999 !important;
+    padding-top: 0.8rem;
+    margin-top: 0.9rem;
+    break-inside: auto;
+  }
+
+  /* A role split across two sheets is unreadable. Keep each one whole. */
+  body:has(.resume-page) .resume__role,
+  body:has(.resume-page) .resume__skills > div,
+  body:has(.resume-page) .cert,
+  body:has(.resume-page) li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  body:has(.resume-page) .resume__roles {
+    gap: 1rem;
+  }
+
+  body:has(.resume-page) .resume__points,
+  body:has(.resume-page) .resume__list,
+  body:has(.resume-page) .resume__skills dd,
+  body:has(.resume-page) .resume__points li,
+  body:has(.resume-page) .resume__list li {
+    font-size: 9.5pt;
+    line-height: 1.35;
+    gap: 0.2rem;
+  }
+
+  body:has(.resume-page) .cert {
+    border: 0 !important;
+    padding: 0.1rem 0;
+  }
+
+  /* Links are dead on paper; the URL is not. */
+  body:has(.resume-page) .resume__list a::after {
+    content: ' (' attr(href) ')';
+    font-size: 8pt;
+  }
+
+  @page {
+    margin: 14mm;
+  }
 }

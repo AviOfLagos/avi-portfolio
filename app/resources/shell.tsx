@@ -10,7 +10,6 @@ import { OpenSourcePanel } from '@/components/resources/OpenSourcePanel'
 import { DesignDevPanel } from '@/components/resources/DesignDevPanel'
 import { KIND_COUNTS, OPEN_SOURCE, RESOURCES } from './data'
 import { TABS, TAB_META, pathForTab, type TabSlug } from './tabs'
-import './resources.css'
 
 export function metadataForTab(tab: TabSlug): Metadata {
   const meta = TAB_META[tab]

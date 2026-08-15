@@ -1,6 +1,5 @@
 import { SKILLS } from '@/lib/content'
 import { FadeUp } from './motion-primitives'
-import './toolkit.css'
 
 /**
  * The toolkit grid. Items with a recognisable mark get a 16px logo; everything

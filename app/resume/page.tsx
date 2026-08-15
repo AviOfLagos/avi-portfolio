@@ -4,7 +4,6 @@ import { BreadcrumbLd } from '@/components/StructuredData'
 import { Reveal, FadeUp } from '@/components/motion-primitives'
 import { HoverLetters } from '@/components/HoverLetters'
 import { CertificationList } from '@/components/CertificationList'
-import './resume-print.css'
 
 const RESUME_PDF = '/David-Olatunji-Resume.pdf'
 

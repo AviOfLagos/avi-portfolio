@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react'
 import { prefersReducedMotion } from '@/lib/use-in-view'
-import './field.css'
 
 /**
  * Ambient point field. Mounted once in the root layout, so it survives
