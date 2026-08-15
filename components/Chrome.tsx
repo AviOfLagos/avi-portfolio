@@ -152,6 +152,14 @@ export function Nav() {
   const [paletteMounted, setPaletteMounted] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const burgerRef = useRef<HTMLButtonElement>(null)
+  // The shortcut listens for either modifier, so the chip has to say which one
+  // this visitor actually presses. Resolved after mount to keep SSR stable.
+  const [modifier, setModifier] = useState('⌘')
+
+  useEffect(() => {
+    const apple = /mac|iphone|ipad|ipod/i.test(navigator.platform || navigator.userAgent)
+    if (!apple) setModifier('Ctrl\u00a0')
+  }, [])
 
   const openPalette = () => {
     setPaletteMounted(true)
@@ -233,9 +241,9 @@ export function Nav() {
             className="nav__kbd"
             onClick={openPalette}
             onPointerEnter={() => setPaletteMounted(true)}
-            aria-label="Open command palette"
+            aria-label={`Open command palette, ${modifier.trim()} K`}
           >
-            ⌘K
+            {modifier}K
           </button>
           <button
             ref={burgerRef}

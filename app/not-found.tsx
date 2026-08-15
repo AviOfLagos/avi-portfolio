@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { PERSON } from '@/lib/content'
-import { RequestedPath } from '@/components/Missing'
+import { RequestedPath, ShortcutKey } from '@/components/Missing'
 
 export const metadata: Metadata = {
   title: 'Not found',
@@ -53,7 +53,7 @@ export default function NotFound() {
       </ul>
 
       <p className="mono oops__hint">
-        Tip: press ⌘K and search for it. That works better than guessing URLs.
+        Tip: press <ShortcutKey /> and search for it. That works better than guessing URLs.
       </p>
     </section>
   )
