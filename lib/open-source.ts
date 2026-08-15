@@ -134,23 +134,6 @@ export const openSourceProjects: OpenSourceProject[] = [
     category: 'Developer tool',
   },
   {
-    slug: 'local-media-router',
-    name: 'local-media-router',
-    tagline: 'Repository name and description do not match its current contents.',
-    description:
-      'The GitHub description describes an RTMP stream relay for local deployment with multi-stream support and OBS integration, but no such code is in the repository. What is actually committed is a marketing workspace — a CLAUDE.md and a marketing/ directory of skill configuration for an unrelated product. GitHub detects no source languages here. Listed for completeness rather than as usable software.',
-    repo: 'https://github.com/AviOfLagos/local-media-router',
-    stack: [],
-    topics: [],
-    stars: 0,
-    language: 'None detected',
-    license: null,
-    hasReadme: true,
-    contributionNote:
-      'Nothing to build against yet. The repo needs either the RTMP relay code its description promises or a description that matches what is there.',
-    category: 'Demo',
-  },
-  {
     slug: 'brandagi',
     name: 'BrandAGI',
     tagline: 'Multi-agent pipeline that turns a brand brief into a strategy and scheduled social content.',
@@ -220,6 +203,24 @@ export const openSourceProjects: OpenSourceProject[] = [
     contributionNote:
       'No open issues. The README claims MIT but no LICENSE file is committed — adding one is a one-file PR. Beyond that, the matching logic for unscheduled recordings is the part most likely to need work.',
     category: 'Automation',
+  },
+  {
+    slug: 'witch-text-editor',
+    name: 'Witch Text Editor',
+    tagline: 'A rich-text blog editor built on TipTap, with tables, task lists and embeds.',
+    description:
+      'A writing surface for long-form posts rather than a comment box. Built on TipTap, it covers the parts most editors skip: code blocks with syntax highlighting, tables, task lists, text alignment, images, links, placeholders and YouTube embeds. Started in v0 and kept in sync with that project, so the repository tracks the deployed app.',
+    repo: 'https://github.com/AviOfLagos/Witch-text-editor',
+    live: 'https://v0-witch-text-editor.vercel.app',
+    stack: ['TypeScript', 'Next.js', 'TipTap', 'Tailwind CSS', 'Radix UI', 'React Hook Form'],
+    topics: [],
+    stars: 0,
+    language: 'TypeScript',
+    license: null,
+    hasReadme: true,
+    contributionNote:
+      'No licence committed, so it cannot legally be reused yet — that is the first PR worth making. After that, the editor is the kind of thing that improves through use: paste handling, image upload targets and keyboard shortcuts are the usual rough edges.',
+    category: 'Developer tool',
   },
 ]
 

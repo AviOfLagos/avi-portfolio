@@ -6,14 +6,9 @@ import type { ExternalPost } from '@/lib/posts'
 
 /* ---------------- Open source ---------------- */
 
-/**
- * local-media-router is excluded: its GitHub description advertises an RTMP
- * relay that is not in the repository. Listing it would send people to
- * something that does not do what the card says.
- */
-export const OPEN_SOURCE: OpenSourceProject[] = openSourceProjects.filter(
-  (p) => p.slug !== 'local-media-router',
-)
+// local-media-router used to be filtered out here; it is now gone from the
+// source list entirely, so this is a straight pass-through.
+export const OPEN_SOURCE: OpenSourceProject[] = openSourceProjects
 
 /* ---------------- Medium thumbnails ---------------- */
 
