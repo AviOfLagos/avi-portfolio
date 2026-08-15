@@ -22,6 +22,17 @@
   --font-display: var(--font-display-face), system-ui, sans-serif;
   --font-mono: var(--font-mono-face), ui-monospace, monospace;
 
+  /* --- measure -------------------------------------------------------------
+     Line length, not container width, decides whether prose is readable.
+     Typographic research puts the comfortable range at 45–75 characters; past
+     that the eye loses its place on the return sweep, which is exactly what
+     long excerpts in a wide row feel like. Width is set in `ch` so the measure
+     holds regardless of font size or viewport.
+     Rule: any run of prose longer than a few words gets one of these. */
+  --measure: 68ch;        /* default for body copy and excerpts */
+  --measure-tight: 52ch;  /* ledes and intros, where shorter reads punchier */
+  --measure-wide: 78ch;   /* dense reference text, e.g. résumé bullets */
+
   /* --- geometry ----------------------------------------------------------- */
   --nav-h: 76px;
   --radius-sm: 6px;
@@ -319,7 +330,7 @@ button { font-family: inherit; }
   letter-spacing: -0.04em; line-height: 0.94; text-transform: uppercase;
 }
 .page-head__lede {
-  margin-top: 1.6rem; max-width: 52ch;
+  margin-top: 1.6rem; max-width: var(--measure-tight);
   font-size: clamp(1.05rem, 1.7vw, 1.3rem); line-height: 1.6; color: var(--muted);
 }
 
@@ -526,7 +537,7 @@ button { font-family: inherit; }
   font-size: 0.58rem; letter-spacing: 0.12em; color: var(--muted);
   border: 1px solid var(--line-strong); border-radius: 2px; padding: 0.2rem 0.45rem;
 }
-.archive__note { color: var(--muted); font-size: 0.95rem; line-height: 1.5; margin-top: 0.4rem; max-width: 62ch; }
+.archive__note { color: var(--muted); font-size: 0.95rem; line-height: 1.5; margin-top: 0.4rem; max-width: var(--measure); }
 .archive__side { text-align: right; white-space: nowrap; }
 
 /* ---------- Stats ---------- */
@@ -667,7 +678,7 @@ button { font-family: inherit; }
   letter-spacing: -0.02em; line-height: 1.25;
 }
 .post-row:hover .post-row__title { color: var(--accent); }
-.post-row__excerpt { color: var(--muted); margin-top: 0.6rem; line-height: 1.6; max-width: 62ch; font-size: 0.97rem; }
+.post-row__excerpt { color: var(--muted); margin-top: 0.6rem; line-height: 1.6; max-width: var(--measure); font-size: 0.97rem; }
 .badge {
   display: inline-block; font-family: var(--font-mono); font-size: 0.6rem;
   letter-spacing: 0.14em; text-transform: uppercase;
@@ -1091,7 +1102,7 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
   justify-content: center;
   gap: 1.1rem;
   padding-block: clamp(4rem, 12vh, 8rem);
-  max-width: 62ch;
+  max-width: var(--measure);
 }
 /* Outlined numerals, same device as the footer word. */
 .oops__code {
@@ -1483,6 +1494,7 @@ body > .footer {
 }
 
 .hrow__sub {
+  max-width: var(--measure);
   color: var(--muted);
   font-size: 0.85rem;
   line-height: 1.55;
@@ -1696,7 +1708,7 @@ body > .footer {
 .rpanel__lede {
   color: var(--muted);
   margin-top: 0.9rem;
-  max-width: 62ch;
+  max-width: var(--measure);
   font-size: 0.95rem;
 }
 
@@ -1937,6 +1949,7 @@ body > .footer {
 }
 
 .md__row-sub {
+  max-width: var(--measure);
   color: var(--muted);
   font-size: 0.85rem;
   line-height: 1.5;
@@ -2542,4 +2555,89 @@ body > .footer {
     opacity: 1;
   }
   .md__list .md__row:not(.is-active) .md__row-meta { color: var(--muted); }
+}
+
+
+/* ============================================================================
+   MEASURE
+   Line length is the readability lever, not font size. Anything that is a
+   sentence rather than a label caps its measure here, so a wide container
+   makes generous whitespace instead of a 160-character line.
+   ============================================================================ */
+.md__row-sub,
+.md__detail-inner p,
+.md__detail-inner li,
+.hrow__sub,
+.board__intro,
+.post-row__excerpt,
+.archive__note,
+.resume__points li,
+.footer__blurb p {
+  max-width: var(--measure);
+}
+
+.page-head__lede,
+.section__lede,
+.footer__identity-line {
+  max-width: var(--measure-tight);
+}
+
+.resume__role .resume__points li {
+  max-width: var(--measure-wide);
+}
+
+/* ============================================================================
+   FAQ
+   <details> styled as an accordion. The marker is drawn rather than using the
+   native triangle, which cannot be styled consistently across browsers.
+   ========================================================================= */
+.faq { border-top: 1px solid var(--line); }
+.faq__item { border-bottom: 1px solid var(--line); }
+.faq__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 0.5rem;
+  cursor: pointer;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  list-style: none;
+  transition: color 0.25s ease, padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Both syntaxes: WebKit still needs the pseudo-element form. */
+.faq__q::-webkit-details-marker { display: none; }
+.faq__q:hover, .faq__q:focus-visible { color: var(--accent); padding-left: 1.2rem; }
+.faq__item[open] .faq__q { color: var(--accent); }
+
+/* A plus that becomes a minus, drawn from two bars. */
+.faq__marker {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+}
+.faq__marker::before,
+.faq__marker::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.faq__marker::after { transform: rotate(90deg); }
+.faq__item[open] .faq__marker { color: var(--accent); }
+.faq__item[open] .faq__marker::after { transform: rotate(0deg); }
+
+.faq__a {
+  padding: 0 0.5rem 1.7rem;
+  max-width: var(--measure);
+}
+.faq__a p { color: var(--muted); line-height: 1.7; font-size: 1rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__q, .faq__marker::before, .faq__marker::after { transition: none; }
 }

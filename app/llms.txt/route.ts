@@ -1,6 +1,7 @@
 import { PERSON, VENTURES, ARCHIVE, EXPERIENCE, SKILLS } from '@/lib/content'
 import { POSTS, EXTERNAL_POSTS } from '@/lib/posts'
 import { SITE_URL } from '@/lib/site'
+import { FAQS } from '@/lib/faq'
 
 // Prerendered at build time so it costs nothing to serve.
 export const dynamic = 'force-static'
@@ -80,6 +81,9 @@ export function GET() {
     `- [Medium](${PERSON.socials.medium})`,
     `- [Dev.to](${PERSON.socials.devto})`,
     '',
+    '## FAQ',
+    '',
+    ...FAQS.flatMap((f) => [`### ${f.question}`, '', f.answer, '']),
     '## Pages',
     '',
     `- [Work](${SITE_URL}/work): every product, with case studies`,
@@ -87,6 +91,7 @@ export function GET() {
     `- [Resources](${SITE_URL}/resources): writing, open source and design resources`,
     `- [Open source](${SITE_URL}/resources/open-source): projects, with repos and live demos`,
     `- [Design & dev resources](${SITE_URL}/resources/design-dev): Figma files and Pinterest boards`,
+    `- [FAQ](${SITE_URL}/faq): what I work on, engagement types, process, rates, timezones`,
     `- [Contact](${SITE_URL}/contact): email, booking links, socials`,
     `- [Résumé](${SITE_URL}/resume): full experience, skills, education, certifications`,
     '',

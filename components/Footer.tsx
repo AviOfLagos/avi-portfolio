@@ -55,7 +55,7 @@ export function Footer() {
                 <span className="mono">Pages</span>
                 <Link href="/work">Work</Link>
                 <Link href="/about">About</Link>
-                <Link href="/resources">Resources</Link>
+                <Link href="/faq">FAQ</Link>
                 <Link href="/contact">Contact</Link>
                 <Link href="/resume">Résumé</Link>
               </div>

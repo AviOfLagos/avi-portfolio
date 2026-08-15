@@ -1,5 +1,6 @@
 import { PERSON, VENTURES, EXPERIENCE, SKILLS, EDUCATION } from '@/lib/content'
 import { SITE_URL } from '@/lib/site'
+import { FAQS } from '@/lib/faq'
 
 /**
  * JSON-LD blocks. Search engines and AI answer engines read these to decide
@@ -186,6 +187,30 @@ export function ArticleLd({
         mainEntityOfPage: `${SITE_URL}/writing/${slug}`,
         // The generated route has no extension; /opengraph-image.png is a 404.
         image: [`${SITE_URL}/writing/${slug}/opengraph-image`],
+      }}
+    />
+  )
+}
+
+/**
+ * FAQPage is one of the few schema types that still earns rich results, and
+ * answer engines quote it readily because the question/answer pairing is
+ * unambiguous. It mirrors the page exactly — the same array renders both.
+ */
+export function FaqLd() {
+  return (
+    <Ld
+      data={{
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        '@id': `${SITE_URL}/faq`,
+        url: `${SITE_URL}/faq`,
+        mainEntity: FAQS.map((f) => ({
+          '@type': 'Question',
+          name: f.question,
+          acceptedAnswer: { '@type': 'Answer', text: f.answer },
+        })),
+        author: { '@id': PERSON_ID },
       }}
     />
   )

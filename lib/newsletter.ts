@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
+import { confirmationHtml, confirmationSubject, confirmationText } from './newsletter-email'
 
 /**
  * Double opt-in without a database: the confirmation link carries a signed,
@@ -52,9 +53,15 @@ export function verify(token: string, secret: string): string | null {
   } catch {
     return null
   }
-  const [email, expires, mac] = decoded.split('.')
+  // Parse from the right: the payload is `email.expires.mac`, and every real
+  // email address contains dots, so splitting left-to-right made the domain
+  // the expiry and no token ever verified.
+  const parts = decoded.split('.')
+  const mac = parts.pop()
+  const expires = parts.pop()
+  const email = parts.join('.')
   if (!email || !expires || !mac) return null
-  if (Number(expires) < Date.now()) return null
+  if (!Number.isFinite(Number(expires)) || Number(expires) < Date.now()) return null
 
   const expected = createHmac('sha256', secret).update(`${email}.${expires}`).digest('base64url')
   const a = Buffer.from(mac)
@@ -82,15 +89,11 @@ export function sendConfirmation(email: string, link: string, config: Config) {
   return resend('/emails', config, {
     from: config.from,
     to: email,
-    subject: 'Confirm your subscription',
-    text: [
-      'Thanks for signing up for occasional notes on product, AI and building in Lagos.',
-      '',
-      `Confirm your email: ${link}`,
-      '',
-      'This link expires in 24 hours. If you did not request it, ignore this email.',
-      '— Avi',
-    ].join('\n'),
+    subject: confirmationSubject(),
+    // Both parts: clients that block HTML, and anyone reading in a terminal,
+    // still get the link and the joke.
+    html: confirmationHtml(link),
+    text: confirmationText(link),
   })
 }
 

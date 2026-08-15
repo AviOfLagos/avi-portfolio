@@ -79,7 +79,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
       </head>
-      <body>
+      {/* Extensions like Grammarly inject attributes onto <body> before React
+          hydrates, which React reports as a mismatch it cannot patch. This
+          suppresses the warning for this element only — it does not affect
+          hydration checks on any of our own markup. */}
+      <body suppressHydrationWarning>
         <a className="skip-link" href="#main">Skip to content</a>
         <PersonAndSiteLd />
         {/* One persistent ambient field for every route: mounted here so it never
