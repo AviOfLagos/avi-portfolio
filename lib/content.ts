@@ -11,7 +11,7 @@ export const PERSON = {
   phone: "+234 817 045 8819",
   /** Shown in the footer next to the booking CTA. Keep it accurate — a stale
    *  availability line is worse than none at all. */
-  availability: 'Available for Q4 2026',
+  availability: "Available for Q4 2026",
   // Cal.com booking links, surfaced on /contact.
   booking: {
     intro: {
@@ -148,9 +148,15 @@ export const VENTURES: Venture[] = [
       "Reviewed and tested each release myself before sign-off, so what shipped matched what was specified.",
     ],
     outcomes: [
-      { value: "4", label: "sides served: buyers, dealers, parts sellers, repairers" },
+      {
+        value: "4",
+        label: "sides served: buyers, dealers, parts sellers, repairers",
+      },
       { value: "16", label: "Nigerian cities covered at launch" },
-      { value: "3", label: "feedback streams merged into one fix list: QA, beta, research" },
+      {
+        value: "3",
+        label: "feedback streams merged into one fix list: QA, beta, research",
+      },
     ],
     stack: [
       "Next.js",
