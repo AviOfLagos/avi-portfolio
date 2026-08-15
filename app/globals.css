@@ -2585,3 +2585,59 @@ body > .footer {
 .resume__role .resume__points li {
   max-width: var(--measure-wide);
 }
+
+/* ============================================================================
+   FAQ
+   <details> styled as an accordion. The marker is drawn rather than using the
+   native triangle, which cannot be styled consistently across browsers.
+   ========================================================================= */
+.faq { border-top: 1px solid var(--line); }
+.faq__item { border-bottom: 1px solid var(--line); }
+.faq__q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem 0.5rem;
+  cursor: pointer;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  list-style: none;
+  transition: color 0.25s ease, padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Both syntaxes: WebKit still needs the pseudo-element form. */
+.faq__q::-webkit-details-marker { display: none; }
+.faq__q:hover, .faq__q:focus-visible { color: var(--accent); padding-left: 1.2rem; }
+.faq__item[open] .faq__q { color: var(--accent); }
+
+/* A plus that becomes a minus, drawn from two bars. */
+.faq__marker {
+  position: relative;
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--muted);
+}
+.faq__marker::before,
+.faq__marker::after {
+  content: '';
+  position: absolute;
+  inset: 50% 0 auto 0;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.faq__marker::after { transform: rotate(90deg); }
+.faq__item[open] .faq__marker { color: var(--accent); }
+.faq__item[open] .faq__marker::after { transform: rotate(0deg); }
+
+.faq__a {
+  padding: 0 0.5rem 1.7rem;
+  max-width: var(--measure);
+}
+.faq__a p { color: var(--muted); line-height: 1.7; font-size: 1rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .faq__q, .faq__marker::before, .faq__marker::after { transition: none; }
+}
