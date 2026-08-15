@@ -216,10 +216,10 @@ export const openSourceProjects: OpenSourceProject[] = [
     topics: [],
     stars: 0,
     language: 'TypeScript',
-    license: null,
+    license: 'MIT License',
     hasReadme: true,
     contributionNote:
-      'No licence committed, so it cannot legally be reused yet — that is the first PR worth making. After that, the editor is the kind of thing that improves through use: paste handling, image upload targets and keyboard shortcuts are the usual rough edges.',
+      'MIT licensed, so it is genuinely reusable. The editor is the kind of thing that improves through use: paste handling, image upload targets and keyboard shortcuts are the usual rough edges.',
     category: 'Developer tool',
   },
 ]
