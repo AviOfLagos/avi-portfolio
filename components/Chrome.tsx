@@ -60,7 +60,15 @@ export function SmoothScroll() {
   }, [])
 
   useEffect(() => {
+    // Lenis keeps its own scroll position, so window.scrollTo alone leaves it
+    // convinced we are still mid-page and it scrolls back. Reset both, and
+    // resize because the new route is a different height.
+    const lenis = (window as unknown as {
+      lenis?: { scrollTo: (t: number, o?: { immediate?: boolean }) => void; resize: () => void }
+    }).lenis
     window.scrollTo(0, 0)
+    lenis?.scrollTo(0, { immediate: true })
+    lenis?.resize()
   }, [pathname])
 
   return null

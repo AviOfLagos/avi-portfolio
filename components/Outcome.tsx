@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useInViewOnce, prefersReducedMotion } from '@/lib/use-in-view'
 
 /**
@@ -12,12 +12,28 @@ const NUMBER = /^(\D*?)(\d+(?:\.\d+)?)(.*)$/
 
 export function Outcome({ value, label, color }: { value: string; label: string; color: string }) {
   const [ref, inView] = useInViewOnce<HTMLDivElement>('0px 0px -12% 0px')
-  const match = NUMBER.exec(value)
-  const target = match ? Number(match[2]) : 0
+
+  // Parse once per value. Everything the effect depends on has to be a
+  // primitive: a fresh array from .exec() would re-run the effect on every
+  // render, and since the animation itself sets state, that never settles.
+  const { prefix, suffix, target, decimals, numeric } = useMemo(() => {
+    const match = NUMBER.exec(value)
+    if (!match) {
+      return { prefix: '', suffix: '', target: 0, decimals: 0, numeric: false }
+    }
+    return {
+      prefix: match[1],
+      suffix: match[3],
+      target: Number(match[2]),
+      decimals: match[2].includes('.') ? 1 : 0,
+      numeric: true,
+    }
+  }, [value])
+
   const [shown, setShown] = useState(target)
 
   useEffect(() => {
-    if (!match) return
+    if (!numeric) return
     if (prefersReducedMotion()) {
       setShown(target)
       return
@@ -26,30 +42,30 @@ export function Outcome({ value, label, color }: { value: string; label: string;
       setShown(0)
       return
     }
+
     const duration = 1100
+    const factor = 10 ** decimals
     let raf = 0
     let start = 0
     const step = (time: number) => {
       if (!start) start = time
       const p = Math.min((time - start) / duration, 1)
       const eased = 1 - Math.pow(1 - p, 3)
-      // Keep one decimal only if the source value had one.
-      const next = eased * target
-      setShown(match[2].includes('.') ? Math.round(next * 10) / 10 : Math.round(next))
+      setShown(Math.round(eased * target * factor) / factor)
       if (p < 1) raf = requestAnimationFrame(step)
     }
     raf = requestAnimationFrame(step)
     return () => cancelAnimationFrame(raf)
-  }, [inView, target, match])
+  }, [inView, numeric, target, decimals])
 
   return (
     <div ref={ref} className="outcome" style={{ ['--vcolor' as string]: color }}>
       <div className="outcome__value">
-        {match ? (
+        {numeric ? (
           <>
-            {match[1] && <span className="outcome__affix">{match[1]}</span>}
-            {shown}
-            {match[3] && <span className="outcome__affix">{match[3]}</span>}
+            {prefix && <span className="outcome__affix">{prefix}</span>}
+            {shown.toFixed(decimals)}
+            {suffix && <span className="outcome__affix">{suffix}</span>}
           </>
         ) : (
           value
