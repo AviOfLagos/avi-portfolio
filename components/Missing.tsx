@@ -22,3 +22,15 @@ export function RequestedPath() {
     </p>
   )
 }
+
+/** The palette shortcut, written with the modifier this visitor actually has. */
+export function ShortcutKey() {
+  const [modifier, setModifier] = useState('⌘')
+
+  useEffect(() => {
+    const apple = /mac|iphone|ipad|ipod/i.test(navigator.platform || navigator.userAgent)
+    if (!apple) setModifier('Ctrl ')
+  }, [])
+
+  return <span>{modifier}K</span>
+}

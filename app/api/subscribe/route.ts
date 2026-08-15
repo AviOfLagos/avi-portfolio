@@ -12,10 +12,19 @@ export async function POST(request: Request) {
   }
 
   let email: unknown
+  let trap: unknown
   try {
-    ({ email } = await request.json())
+    const body = await request.json()
+    email = body?.email
+    trap = body?.company
   } catch {
     return NextResponse.json({ error: 'Send an email address.' }, { status: 400 })
+  }
+
+  // Honeypot: hidden to people, irresistible to form bots. Answer as if it
+  // worked so the bot has nothing to learn from the response.
+  if (typeof trap === 'string' && trap.trim() !== '') {
+    return NextResponse.json({ ok: true })
   }
 
   if (!isEmail(email)) {

@@ -3,11 +3,18 @@
 import { useMemo, useState } from 'react'
 import Image from 'next/image'
 import { Cover } from '@/components/Cover'
-import { KIND_LABELS, type Resource, type ResourceKind } from '@/app/resources/data'
+import {
+  KIND_LABELS,
+  PIN_BOARDS,
+  PIN_TOTAL,
+  type Resource,
+  type ResourceKind,
+} from '@/app/resources/data'
 import { MasterDetail } from './MasterDetail'
 import { ExternalMark } from './ExternalMark'
+import { BoardSlider } from './BoardSlider'
 
-const KINDS: ResourceKind[] = ['figma', 'dev-tool', 'pin']
+const KINDS: ResourceKind[] = ['figma', 'dev-tool']
 
 export function DesignDevPanel({
   resources,
@@ -36,8 +43,8 @@ export function DesignDevPanel({
         </span>
       </div>
       <p className="rpanel__lede">
-        Figma Community files, developer tools and a visual reference library. Hover or arrow through
-        the list to preview; Enter opens the source.
+        Figma Community files and developer tools. Hover or arrow through the list to preview; Enter
+        opens the source.
       </p>
 
       <div className="rfilters" role="group" aria-label="Filter resources by kind">
@@ -148,6 +155,23 @@ export function DesignDevPanel({
           </>
         )}
       />
+
+      <div className="boards">
+        <div className="rpanel__head">
+          <h2 className="rpanel__title">Pinterest boards</h2>
+          <span className="mono">
+            {PIN_BOARDS.length} boards · {PIN_TOTAL} pins
+          </span>
+        </div>
+        <p className="rpanel__lede">
+          The visual reference library — patterns, components, charts and interactions I collect
+          while designing. Swipe, or use the arrows, to page through a board.
+        </p>
+
+        {PIN_BOARDS.map((board) => (
+          <BoardSlider key={board.slug} board={board} />
+        ))}
+      </div>
     </div>
   )
 }

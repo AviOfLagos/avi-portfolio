@@ -218,6 +218,10 @@ button { font-family: inherit; }
 .hero > *:not(.field), .contact-hero > *:not(.field) { position: relative; z-index: 1; }
 .contact-hero { position: relative; }
 
+/* The nickname hiding inside the full name. Colour only: the reveal animation
+   and hover behaviour are untouched. */
+.hero__letter--nick, .hero__letter--nick > span { color: var(--accent); }
+
 .hero__eyebrow { display: flex; gap: 0.8rem; align-items: center; margin-bottom: 1.2rem; flex-wrap: wrap; }
 .hero__eyebrow .dot {
   width: 8px; height: 8px; border-radius: 50%;
@@ -327,6 +331,16 @@ button { font-family: inherit; }
 /* Reserve the line so a message never shifts the layout. */
 .subscribe__status { min-height: 1.3rem; font-size: 0.85rem; color: var(--muted); }
 .subscribe__status.is-error { color: #ff9b7d; }
+.subscribe__input[aria-invalid='true'] { border-color: #ff9b7d; }
+/* Off-screen rather than display:none, which some bots skip. */
+.subscribe__trap {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
 
 /* The mailer is not wired up: say so, and hand over the consolation prize. */
 .subscribe--result { align-items: center; }

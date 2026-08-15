@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { PERSON, VENTURES, STATS } from '@/lib/content'
-import { POSTS } from '@/lib/posts'
+import { ResourcesTeaser } from '@/components/home/ResourcesTeaser'
 import { Subscribe } from '@/components/Subscribe'
 import { Hero } from '@/components/Hero'
 import { VentureList } from '@/components/VentureList'
@@ -69,28 +69,14 @@ export default function Home() {
         <div className="section__head">
           <h2 className="section__title">
             <Reveal>
-              Writing<span className="accent">.</span>
+              Resources<span className="accent">.</span>
             </Reveal>
           </h2>
-          <Link className="mono" href="/writing" style={{ textDecoration: 'underline' }}>
-            All posts →
+          <Link className="mono" href="/resources" style={{ textDecoration: 'underline' }}>
+            The whole hub →
           </Link>
         </div>
-        <div className="card-grid">
-          {POSTS.slice(0, 3).map((p, i) => (
-            <FadeUp key={p.slug} delay={i * 0.07}>
-              <Link href={`/writing/${p.slug}`}>
-                <article className="card" style={{ height: '100%' }}>
-                  <div className="mono" style={{ marginBottom: '0.9rem' }}>
-                    {p.tag} · {p.readingTime}
-                  </div>
-                  <h3>{p.title}</h3>
-                  <p>{p.excerpt}</p>
-                </article>
-              </Link>
-            </FadeUp>
-          ))}
-        </div>
+        <ResourcesTeaser />
       </section>
 
       <section className="section container">

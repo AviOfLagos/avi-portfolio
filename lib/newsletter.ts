@@ -9,7 +9,6 @@ const TTL_MS = 1000 * 60 * 60 * 24 // 24 hours
 
 export type Config = {
   apiKey: string
-  audienceId: string
   secret: string
   from: string
 }
@@ -17,19 +16,26 @@ export type Config = {
 /** Returns null when the integration has not been provisioned yet. */
 export function readConfig(): Config | null {
   const apiKey = process.env.RESEND_API_KEY
-  const audienceId = process.env.RESEND_AUDIENCE_ID
   const secret = process.env.NEWSLETTER_SECRET
-  if (!apiKey || !audienceId || !secret) return null
+  if (!apiKey || !secret) return null
   return {
     apiKey,
-    audienceId,
     secret,
     from: process.env.NEWSLETTER_FROM ?? 'Avi <hello@nexprove.com>',
   }
 }
 
+/**
+ * Deliberately strict, and length-capped: an address is user input that ends up
+ * in an outbound API call, so anything unusual is rejected rather than
+ * sanitised. RFC 5321 caps a path at 254 characters.
+ */
+const EMAIL = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,63}$/
+
 export function isEmail(value: unknown): value is string {
-  return typeof value === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(value.trim())
+  if (typeof value !== 'string') return false
+  const trimmed = value.trim()
+  return trimmed.length >= 6 && trimmed.length <= 254 && EMAIL.test(trimmed)
 }
 
 export function sign(email: string, secret: string) {
@@ -88,9 +94,10 @@ export function sendConfirmation(email: string, link: string, config: Config) {
   })
 }
 
+/**
+ * Resend's contact book is account-wide now: contacts are created at /contacts
+ * and grouped with segments, so there is no audience id to pass.
+ */
 export function addContact(email: string, config: Config) {
-  return resend(`/audiences/${config.audienceId}/contacts`, config, {
-    email,
-    unsubscribed: false,
-  })
+  return resend('/contacts', config, { email, unsubscribed: false })
 }
