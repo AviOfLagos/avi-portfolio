@@ -8,6 +8,8 @@ import { Nav } from '@/components/Chrome'
 import { Decorations } from '@/components/Decorations'
 import { ScrollProgress } from '@/components/motion-primitives'
 import { Footer } from '@/components/Footer'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Field } from '@/components/Field'
 
 const display = Space_Grotesk({
@@ -88,6 +90,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Nav />
         <main id="main">{children}</main>
         <Footer />
+        {/* Cookieless, so no consent banner. Speed Insights reports real-user
+            Core Web Vitals, which is the only honest check on the perf work. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
