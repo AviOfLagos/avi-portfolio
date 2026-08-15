@@ -1,0 +1,25 @@
+{
+  "result": {
+    "_meta": {
+      "organizationId": "delegated-local-admin",
+      "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+      "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+    },
+    "content": [
+      {
+        "type": "text",
+        "text": "Audit adab0123-e9ae-46cf-9815-97bb6bed1880 started for https://deployment-jake-velocity-seattle.trycloudflare.com. Poll get_audit_status until it finishes, then call get_audit_issues for the prioritized issue report (even a failed audit keeps results for every page it crawled)."
+      }
+    ],
+    "structuredContent": {
+      "auditId": "adab0123-e9ae-46cf-9815-97bb6bed1880",
+      "meta": {
+        "organizationId": "delegated-local-admin",
+        "projectId": "08705acc-dabc-4c0f-8b1a-2801a58c90e1",
+        "url": "http://127.0.0.1:3001/p/08705acc-dabc-4c0f-8b1a-2801a58c90e1/audit?auditId=adab0123-e9ae-46cf-9815-97bb6bed1880"
+      }
+    }
+  },
+  "jsonrpc": "2.0",
+  "id": 1786723942558
+}

@@ -20,6 +20,7 @@ export default function CommandPalette({
   const [cursor, setCursor] = useState(0)
   const [visible, setVisible] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   const actions: Action[] = useMemo(
     () => [
@@ -72,13 +73,28 @@ export default function CommandPalette({
       setVisible(false)
       return
     }
+    // Remember where focus came from so closing puts the user back.
+    const opener = document.activeElement as HTMLElement | null
+    const { overflow } = document.body.style
+    document.body.style.overflow = 'hidden'
     setQuery('')
     setCursor(0)
     inputRef.current?.focus()
     // Paint the closed state first so the open transition actually runs.
     const id = requestAnimationFrame(() => setVisible(true))
-    return () => cancelAnimationFrame(id)
+    return () => {
+      cancelAnimationFrame(id)
+      document.body.style.overflow = overflow
+      opener?.focus?.()
+    }
   }, [open])
+
+  // Keep the highlighted row inside the scrolling list.
+  useEffect(() => {
+    listRef.current
+      ?.querySelector('[data-active="true"]')
+      ?.scrollIntoView({ block: 'nearest' })
+  }, [cursor])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -101,6 +117,8 @@ export default function CommandPalette({
       filtered[cursor].run()
       setOpen(false)
     }
+    // The list is driven by the arrow keys, so Tab has nowhere useful to go.
+    if (e.key === 'Tab') e.preventDefault()
   }
 
   let lastGroup = ''
@@ -112,10 +130,23 @@ export default function CommandPalette({
       className={`palette-overlay ${visible ? 'is-open' : ''}`}
       onClick={() => setOpen(false)}
     >
-      <div className="palette" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="palette"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Command palette"
+        onClick={(e) => e.stopPropagation()}
+      >
         <input
           ref={inputRef}
           className="palette__input"
+          aria-label="Search commands"
+          role="combobox"
+          aria-expanded="true"
+          aria-controls="palette-list"
+          aria-activedescendant={filtered[cursor] ? `palette-item-${cursor}` : undefined}
+          autoComplete="off"
+          spellCheck={false}
           placeholder="Type a command…"
           value={query}
           onChange={(e) => {
@@ -124,7 +155,7 @@ export default function CommandPalette({
           }}
           onKeyDown={onInputKey}
         />
-        <div className="palette__list">
+        <div className="palette__list" id="palette-list" role="listbox" ref={listRef}>
           {filtered.map((a, i) => {
             const showGroup = a.group !== lastGroup
             lastGroup = a.group
@@ -132,6 +163,10 @@ export default function CommandPalette({
               <div key={a.label}>
                 {showGroup && <div className="palette__group">{a.group}</div>}
                 <button
+                  id={`palette-item-${i}`}
+                  role="option"
+                  aria-selected={i === cursor}
+                  data-active={i === cursor}
                   className={`palette__item ${i === cursor ? 'active' : ''}`}
                   onMouseEnter={() => setCursor(i)}
                   onClick={() => {

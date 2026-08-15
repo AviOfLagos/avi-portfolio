@@ -70,7 +70,7 @@ export function Hero() {
             className="hero__tagline hero__fade"
             style={{ '--d': '1.1s', '--fade-y': '24px' } as React.CSSProperties}
           >
-            I turn fuzzy ideas into <strong>products people actually use</strong> — and run the
+            I turn fuzzy ideas into <strong>products people actually use</strong>, and run the
             teams that ship them. Currently: an AI marketing OS, an agent registry, and Nigeria&rsquo;s
             first verified solar marketplace.
           </p>

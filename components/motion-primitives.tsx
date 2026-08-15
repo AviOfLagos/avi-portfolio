@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { useInViewOnce } from '@/lib/use-in-view'
+import { useInViewOnce, prefersReducedMotion } from '@/lib/use-in-view'
 import { subscribeScroll } from '@/lib/scroll'
 
 /* ---------- Masked line reveal ---------- */
@@ -16,7 +16,7 @@ export function Reveal({
   y?: string
   as?: 'span' | 'div'
 }) {
-  const [ref, inView] = useInViewOnce<HTMLDivElement>('-20% 0px')
+  const [ref, inView] = useInViewOnce<HTMLDivElement>('0px 0px -18% 0px')
   const Tag = as === 'div' ? 'div' : 'span'
   const Inner = as === 'div' ? 'div' : 'span'
   return (
@@ -101,6 +101,7 @@ export function Magnetic({
   const setTarget = useFollowSpring(ref, 0.18)
 
   const onMove = (e: React.MouseEvent) => {
+    if (prefersReducedMotion()) return
     const r = ref.current?.getBoundingClientRect()
     if (!r) return
     setTarget((e.clientX - r.left - r.width / 2) * strength, (e.clientY - r.top - r.height / 2) * strength)
@@ -201,11 +202,15 @@ export function Marquee({ items }: { items: string[] }) {
 
 /* ---------- Count-up stat ---------- */
 export function StatValue({ value, suffix }: { value: number; suffix: string }) {
-  const [ref, inView] = useInViewOnce<HTMLDivElement>('-10% 0px')
+  const [ref, inView] = useInViewOnce<HTMLDivElement>('0px 0px -10% 0px')
   const [display, setDisplay] = useState(0)
 
   useEffect(() => {
     if (!inView) return
+    if (prefersReducedMotion()) {
+      setDisplay(value)
+      return
+    }
     const duration = 1400
     let raf = 0
     let start = 0

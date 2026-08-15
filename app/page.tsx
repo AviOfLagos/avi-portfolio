@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { PERSON, VENTURES, STATS } from '@/lib/content'
 import { POSTS } from '@/lib/posts'
+import { Subscribe } from '@/components/Subscribe'
 import { Hero } from '@/components/Hero'
 import { VentureList } from '@/components/VentureList'
 import { Marquee, StatValue, Reveal, FadeUp, Magnetic } from '@/components/motion-primitives'
@@ -90,6 +91,10 @@ export default function Home() {
             </FadeUp>
           ))}
         </div>
+      </section>
+
+      <section className="section container">
+        <Subscribe />
       </section>
 
       <section className="section container contact-hero">

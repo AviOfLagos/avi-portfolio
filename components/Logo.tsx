@@ -1,6 +1,6 @@
 /**
  * Brand marks. Both are Sora outlines converted to paths, so they never wait on
- * a webfont and never reflow — the wordmark inherits `currentColor` for the
+ * a webfont and never reflow, the wordmark inherits `currentColor` for the
  * letters and takes the accent from `--accent`.
  */
 
@@ -18,7 +18,7 @@ const A_PATH =
 
 type MarkProps = { size?: number; className?: string }
 
-/** The `{a}` plate — lime ground, ink letter. Same artwork as the favicon. */
+/** The `{a}` plate, lime ground, ink letter. Same artwork as the favicon. */
 export function LogoMark({ size = 28, className }: MarkProps) {
   return (
     <svg

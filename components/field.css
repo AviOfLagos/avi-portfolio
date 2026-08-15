@@ -1,0 +1,36 @@
+/*
+ * Ambient field, mounted once in the root layout.
+ *
+ * Kept out of globals.css on purpose: it is owned by <Field> and imported by it.
+ * The canvas is fixed to the viewport and painted behind everything; the page
+ * chrome is lifted into its own stacking level so text never sits under it.
+ */
+.field--ambient {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  /* Held back so it reads as texture behind body copy, not as a foreground layer. */
+  opacity: 0.8;
+  /* Same edge fade as the old per-page instance, retuned for a full viewport. */
+  mask-image: radial-gradient(120% 90% at 50% 40%, #000 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(120% 90% at 50% 40%, #000 30%, transparent 100%);
+}
+
+/* Content sits above the field. Nav (100), progress (120), cursor, overlays and
+ * the rest of the chrome already carry their own higher z-index. */
+body > #main,
+body > .footer {
+  position: relative;
+  z-index: 1;
+}
+
+/* Reduced motion: the loop never starts, and we also drop the field back so a
+ * frozen frame reads as texture rather than a static overlay. */
+@media (prefers-reduced-motion: reduce) {
+  .field--ambient {
+    opacity: 0.4;
+  }
+}
