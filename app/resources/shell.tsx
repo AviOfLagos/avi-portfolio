@@ -59,14 +59,19 @@ export function ResourcesShell({ tab }: { tab: TabSlug }) {
       </section>
 
       <section className="container resources">
+        {/* Only the active panel is rendered: each tab is its own URL, so
+            shipping all three per page produced four near-identical documents. */}
         <ResourcesTabs
-          initialTab={tab}
-          siteName={PERSON.name}
-          panels={{
-            writing: <WritingPanel />,
-            'open-source': <OpenSourcePanel projects={OPEN_SOURCE} />,
-            'design-dev': <DesignDevPanel resources={RESOURCES} counts={KIND_COUNTS} />,
-          }}
+          activeTab={tab}
+          panel={
+            tab === 'open-source' ? (
+              <OpenSourcePanel projects={OPEN_SOURCE} />
+            ) : tab === 'design-dev' ? (
+              <DesignDevPanel resources={RESOURCES} counts={KIND_COUNTS} />
+            ) : (
+              <WritingPanel />
+            )
+          }
         />
       </section>
 

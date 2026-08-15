@@ -31,7 +31,8 @@ export async function generateMetadata({
       publishedTime: p.date,
       authors: [PERSON.name],
       tags: [p.tag],
-      images: ['/opengraph-image.png'],
+      // No `images` here on purpose: opengraph-image.tsx generates a per-post
+      // card, and naming an image in metadata would override it.
     },
   }
 }

@@ -124,11 +124,28 @@ export function CaseStudyLd({
 }) {
   const v = VENTURES.find((x) => x.slug === slug)
   if (!v) return null
+
+  // A marketplace or platform is a CreativeWork; a thing you install or log
+  // into is a SoftwareApplication, which is both accurate and eligible for
+  // richer treatment.
+  const isApp = v.platform !== 'Marketplace' && v.platform !== 'Platform'
+  const operatingSystem = v.platform.includes('Mobile')
+    ? 'iOS, Android'
+    : v.platform.includes('PWA')
+      ? 'Web, iOS, Android'
+      : 'Web'
+
   return (
     <Ld
       data={{
         '@context': 'https://schema.org',
-        '@type': 'CreativeWork',
+        '@type': isApp ? 'SoftwareApplication' : 'CreativeWork',
+        ...(isApp
+          ? {
+              applicationCategory: 'BusinessApplication',
+              operatingSystem,
+            }
+          : {}),
         name: v.name,
         headline: v.oneLiner,
         description: v.desc,
@@ -167,6 +184,8 @@ export function ArticleLd({
         author: { '@id': PERSON_ID },
         publisher: { '@id': PERSON_ID },
         mainEntityOfPage: `${SITE_URL}/writing/${slug}`,
+        // The generated route has no extension; /opengraph-image.png is a 404.
+        image: [`${SITE_URL}/writing/${slug}/opengraph-image`],
       }}
     />
   )

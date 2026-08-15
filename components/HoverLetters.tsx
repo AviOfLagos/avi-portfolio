@@ -20,7 +20,11 @@ export function HoverLetters({ text, className, as = 'span' }: Props) {
   let index = 0
 
   return (
-    <Tag className={className} aria-label={text}>
+    <Tag className={className}>
+      {/* The visible letters are decorative shrapnel; the real text is exposed
+          once, here. aria-label on a generic span is not reliably announced,
+          so this is a visually hidden node rather than an attribute. */}
+      <span className="sr-only">{text}</span>
       {words.map((word, w) => (
         <span className="hover-word" key={`${word}-${w}`} aria-hidden="true">
           {[...word].map((char) => {
