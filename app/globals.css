@@ -1015,3 +1015,63 @@ main > .section:first-of-type, .page-head, .case-hero, .hero { content-visibilit
 }
 .back-to-top[data-shown='true'] { opacity: 1; transform: none; pointer-events: auto; }
 .back-to-top:hover, .back-to-top:focus-visible { color: var(--accent); border-color: var(--accent); }
+
+/* ---------- 404 / error screens ---------- */
+.oops {
+  min-height: calc(100svh - var(--nav-h) - 6rem);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 1.1rem;
+  padding-block: clamp(4rem, 12vh, 8rem);
+  max-width: 62ch;
+}
+/* Outlined numerals, same device as the footer word. */
+.oops__code {
+  font-size: clamp(4.5rem, 18vw, 11rem);
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(242, 242, 239, 0.18);
+  user-select: none;
+  margin-bottom: 0.4rem;
+}
+.oops__title {
+  font-size: clamp(1.9rem, 5vw, 3.1rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+.oops__lede { color: var(--muted); font-size: 1.02rem; line-height: 1.65; }
+.oops__lede--tight { font-size: 0.95rem; }
+.oops__lede a, .oops__list a { color: var(--accent); text-underline-offset: 3px; text-decoration: underline; }
+.oops__path {
+  color: var(--muted);
+  border: 1px dashed var(--line-strong);
+  padding: 0.6rem 0.9rem;
+  border-radius: 2px;
+  word-break: break-all;
+}
+.oops__path-value { color: var(--ink); }
+.oops__links { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-top: 0.7rem; }
+.oops__links .cta-solid { border: 0; cursor: pointer; font-family: inherit; }
+.oops__list {
+  list-style: none;
+  margin: 0.8rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  border-top: 1px solid var(--line);
+  padding-top: 1.4rem;
+  width: 100%;
+}
+.oops__hint { color: var(--muted); }
+@media (max-width: 620px) {
+  .oops__links .cta-solid, .oops__links .cta-ghost { width: 100%; justify-content: center; }
+}
