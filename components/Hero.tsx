@@ -3,7 +3,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { PERSON } from '@/lib/content'
 import { Preloader } from './Preloader'
-import { Field } from './Field'
 
 export function Hero() {
   const [loading, setLoading] = useState(true)
@@ -38,7 +37,6 @@ export function Hero() {
       {loading && <Preloader onDone={done} />}
 
       <header className={`hero container ${started ? 'hero--started' : ''}`} id="top">
-        <Field />
         <div className="hero__eyebrow hero__fade" style={{ '--d': '0.9s' } as React.CSSProperties}>
           <span className="dot" />
           <span className="mono">

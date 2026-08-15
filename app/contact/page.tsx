@@ -4,7 +4,6 @@ import { PERSON } from '@/lib/content'
 import { Reveal, FadeUp, Magnetic } from '@/components/motion-primitives'
 import { HoverLetters } from '@/components/HoverLetters'
 import { LocalTime } from '@/components/LocalTime'
-import { Field } from '@/components/Field'
 
 export const metadata: Metadata = {
   title: 'Contact',
@@ -28,7 +27,6 @@ export default function ContactPage() {
       <ContactPageLd />
       <BreadcrumbLd trail={[{ name: 'Home', path: '/' }, { name: 'Contact', path: '/contact' }]} />
       <section className="container page-head contact-hero">
-        <Field density={26} />
         <h1 className="contact__title">
           <Reveal><HoverLetters text="Let’s build" /></Reveal>
           <Reveal delay={0.1}>

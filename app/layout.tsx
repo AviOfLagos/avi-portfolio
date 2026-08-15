@@ -8,6 +8,7 @@ import { Nav } from '@/components/Chrome'
 import { Decorations } from '@/components/Decorations'
 import { ScrollProgress } from '@/components/motion-primitives'
 import { Footer } from '@/components/Footer'
+import { Field } from '@/components/Field'
 
 const display = Space_Grotesk({
   subsets: ['latin'],
@@ -74,6 +75,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <PersonAndSiteLd />
+        {/* One persistent ambient field for every route: mounted here so it never
+            unmounts and restarts on a client-side navigation. */}
+        <Field />
         <Decorations />
         <ScrollProgress />
         <Nav />

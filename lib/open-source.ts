@@ -122,6 +122,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     description:
       'A design system studio where you configure colours, typography, shape, spacing, shadows and effects through an interactive drawer and export the result in a format you can drop into a codebase. The original working version is a single-file vanilla HTML/JS prototype, kept in /legacy; the repo is a milestone-by-milestone rebuild of it in Next.js with TypeScript, Tailwind and Zustand. The public README is still the default create-next-app text, so the project notes in CLAUDE.md are the real reference.',
     repo: 'https://github.com/AviOfLagos/prism-studio',
+    live: 'https://prism-ds.vercel.app/',
     stack: ['TypeScript', 'Next.js', 'Tailwind CSS', 'Zustand'],
     topics: [],
     stars: 0,
