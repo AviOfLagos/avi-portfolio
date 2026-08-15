@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { WorkCollectionLd, BreadcrumbLd } from '@/components/StructuredData'
 import { VENTURES, ARCHIVE } from '@/lib/content'
 import { VentureList } from '@/components/VentureList'
+import { ArchiveRow } from '@/components/ArchiveRow'
 import { Reveal, FadeUp } from '@/components/motion-primitives'
 import { HoverLetters } from '@/components/HoverLetters'
 
@@ -49,38 +50,11 @@ export default function WorkPage() {
           <span className="mono">{ARCHIVE.length} earlier builds</span>
         </div>
         <div className="archive">
-          {ARCHIVE.map((a, i) => {
-            const inner = (
-              <>
-                <div>
-                  <div className="archive__name">
-                    {a.name}
-                    {a.url && (
-                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                        <path d="M7 17L17 7M17 7H8M17 7v9" />
-                      </svg>
-                    )}
-                  </div>
-                  <p className="archive__note">{a.note}</p>
-                </div>
-                <div className="archive__side">
-                  <div className="mono">{a.tag}</div>
-                  <div className="mono" style={{ marginTop: '0.4rem' }}>{a.year}</div>
-                </div>
-              </>
-            )
-            return (
-              <FadeUp key={a.name} delay={i * 0.04}>
-                {a.url ? (
-                  <a className="archive__row" href={a.url} target="_blank" rel="noreferrer">
-                    {inner}
-                  </a>
-                ) : (
-                  <div className="archive__row">{inner}</div>
-                )}
-              </FadeUp>
-            )
-          })}
+          {ARCHIVE.map((a, i) => (
+            <FadeUp key={a.name} delay={i * 0.04}>
+              <ArchiveRow entry={a} />
+            </FadeUp>
+          ))}
         </div>
       </section>
     </>

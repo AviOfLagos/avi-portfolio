@@ -11,6 +11,8 @@ import {
   type ResourceKind,
 } from '@/app/resources/data'
 import { MasterDetail } from './MasterDetail'
+import { SearchField } from './SearchField'
+import { haystack, matches, useDebounced } from './search'
 import { ExternalMark } from './ExternalMark'
 import { BoardSlider } from './BoardSlider'
 
@@ -25,11 +27,29 @@ export function DesignDevPanel({
 }) {
   // Empty set means "all"; toggling is additive so two kinds can be shown at once.
   const [active, setActive] = useState<ResourceKind[]>([])
+  const [query, setQuery] = useState('')
+  const debouncedQuery = useDebounced(query)
+
+  // Built once per data change, not once per keystroke.
+  const indexed = useMemo(
+    () => resources.map((r) => ({ r, hay: haystack(r.title, r.blurb, r.meta, r.tags) })),
+    [resources],
+  )
 
   const items = useMemo(
-    () => (active.length === 0 ? resources : resources.filter((r) => active.includes(r.kind))),
-    [resources, active],
+    () =>
+      indexed
+        .filter(({ r }) => active.length === 0 || active.includes(r.kind))
+        .filter(({ hay }) => matches(hay, debouncedQuery))
+        .map(({ r }) => r),
+    [indexed, active, debouncedQuery],
   )
+
+  const filtered = active.length > 0 || debouncedQuery.trim() !== ''
+  const reset = () => {
+    setActive([])
+    setQuery('')
+  }
 
   const toggle = (kind: ResourceKind) =>
     setActive((prev) => (prev.includes(kind) ? prev.filter((k) => k !== kind) : [...prev, kind]))
@@ -46,6 +66,16 @@ export function DesignDevPanel({
         Figma Community files and developer tools. Hover or arrow through the list to preview; Enter
         opens the source.
       </p>
+
+      <SearchField
+        label="Search design and dev resources"
+        placeholder="Search titles, descriptions and tags"
+        value={query}
+        onChange={setQuery}
+        resultCount={items.length}
+        total={resources.length}
+        noun="results"
+      />
 
       <div className="rfilters" role="group" aria-label="Filter resources by kind">
         <button
@@ -74,7 +104,13 @@ export function DesignDevPanel({
         label="Design and development resources"
         getId={(r) => r.id}
         getHref={(r) => r.href}
-        emptyMessage="No resources of that kind. Clear a filter to see the rest."
+        emptyMessage={
+          debouncedQuery.trim() !== ''
+            ? `Nothing here matches “${debouncedQuery.trim()}”.`
+            : 'No resources of that kind.'
+        }
+        onClearFilters={filtered ? reset : undefined}
+        clearLabel="Clear search and filters"
         renderRow={(r) => (
           <>
             <span className="md__thumb" aria-hidden="true">

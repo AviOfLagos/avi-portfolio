@@ -11,14 +11,14 @@ through the Next image optimiser. They have to be self-hosted here.
    .png/.jpg is fine, they get converted to .webp).
 3. Tell Claude, and the conversion + wiring happens automatically.
 
-| Save as | Resource |
-|---|---|
-| `tailwind-design-system.png` | Fully Editable Tailwind Design System |
-| `event-ticket-booking-ui.png` | Event Ticket Booking UI |
-| `wedding-invitations.png` | Wedding Invitations + Editable Assets |
-| `creatives-paykit.png` | Creative's Paykit 2.0 |
-| `drop-shadow-calculation.png` | Mastering Drop Shadow Calculation |
-| `expense-tracker-app.png` | Expense Tracker App |
-| `social-media-video-streaming-app.png` | Social Media Video Streaming App |
+| Save as                                  | Resource                              |
+| ---------------------------------------- | ------------------------------------- |
+| `tailwind-design-system.png`           | Fully Editable Tailwind Design System |
+| `event-ticket-booking-ui.png`          | Event Ticket Booking UI               |
+| `wedding-invitations.png`              | Wedding Invitations + Editable Assets |
+| `creatives-paykit.png`                 | Creative's Paykit 2.0                 |
+| `drop-shadow-calculation.png`          | Mastering Drop Shadow Calculation     |
+| `expense-tracker-app.png`              | Expense Tracker App                   |
+| `social-media-video-streaming-app.png` | Social Media Video Streaming App      |
 
 Filenames match the `slug` field in `lib/figma-resources.ts`.

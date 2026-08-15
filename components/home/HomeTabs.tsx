@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { useRef, useState } from 'react'
+import { Cover } from '@/components/Cover'
 import { FadeUp } from '@/components/motion-primitives'
 import { HoverLetters } from '@/components/HoverLetters'
 import './home-tabs.css'
@@ -14,6 +15,10 @@ export type TeaserItem = {
   href: string
   /** Off-site links open in a new tab and get the outbound arrow. */
   external?: boolean
+  /** Real thumbnail where one exists; <Cover> draws one from the key if not. */
+  image?: string
+  /** Accent the generated cover is drawn in. */
+  color?: string
 }
 
 export type TeaserTab = {
@@ -115,6 +120,16 @@ export function HomeTabs({ tabs, label }: { tabs: TeaserTab[]; label: string }) 
 function Row({ item }: { item: TeaserItem }) {
   const inner = (
     <>
+      <Cover
+        className="hrow__thumb"
+        slug={item.key}
+        color={item.color ?? '#c8ff3e'}
+        src={item.image}
+        alt=""
+        width={112}
+        height={72}
+        sizes="112px"
+      />
       <span className="hrow__main">
         <span className="hrow__title">
           {item.title}

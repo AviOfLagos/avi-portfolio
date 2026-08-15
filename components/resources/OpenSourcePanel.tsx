@@ -1,22 +1,127 @@
 'use client'
 
+import { useMemo, useState } from 'react'
 import type { OpenSourceProject } from '@/lib/open-source'
 import { MasterDetail } from './MasterDetail'
 import { ExternalMark } from './ExternalMark'
+import { SearchField } from './SearchField'
+import { haystack, matches, useDebounced } from './search'
+
+type Category = OpenSourceProject['category']
+
+const CATEGORIES: Category[] = ['Developer tool', 'AI agent', 'Demo', 'Automation']
 
 export function OpenSourcePanel({ projects }: { projects: OpenSourceProject[] }) {
+  // Empty set means "all"; toggling is additive, so categories OR together.
+  const [active, setActive] = useState<Category[]>([])
+  const [liveOnly, setLiveOnly] = useState(false)
+  const [query, setQuery] = useState('')
+  const debouncedQuery = useDebounced(query)
+
+  const counts = useMemo(() => {
+    const map = {} as Record<Category, number>
+    for (const c of CATEGORIES) map[c] = 0
+    for (const p of projects) map[p.category] += 1
+    return map
+  }, [projects])
+
+  const liveCount = useMemo(() => projects.filter((p) => Boolean(p.live)).length, [projects])
+
+  const indexed = useMemo(
+    () =>
+      projects.map((p) => ({
+        p,
+        hay: haystack(p.name, p.tagline, p.description, p.language, p.stack, p.topics, p.category),
+      })),
+    [projects],
+  )
+
+  const items = useMemo(
+    () =>
+      indexed
+        .filter(({ p }) => active.length === 0 || active.includes(p.category))
+        .filter(({ p }) => !liveOnly || Boolean(p.live))
+        .filter(({ hay }) => matches(hay, debouncedQuery))
+        .map(({ p }) => p),
+    [indexed, active, liveOnly, debouncedQuery],
+  )
+
+  const toggle = (category: Category) =>
+    setActive((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category],
+    )
+
+  const filtered = active.length > 0 || liveOnly || debouncedQuery.trim() !== ''
+  const reset = () => {
+    setActive([])
+    setLiveOnly(false)
+    setQuery('')
+  }
+
   return (
     <div className="rpanel">
       <div className="rpanel__head">
         <h2 className="rpanel__title">Open source</h2>
-        <span className="mono">{projects.length} repositories</span>
+        <span className="mono">
+          {items.length} of {projects.length} repositories
+        </span>
       </div>
       <p className="rpanel__lede">
         Hover or arrow through the list to preview a project. Enter opens the repository.
       </p>
 
+      <SearchField
+        label="Search open-source projects"
+        placeholder="Search names, descriptions, stack and topics"
+        value={query}
+        onChange={setQuery}
+        resultCount={items.length}
+        total={projects.length}
+        noun="results"
+      />
+
+      <div className="rfilters" role="group" aria-label="Filter projects by category">
+        <button
+          type="button"
+          className={`rfilter ${active.length === 0 && !liveOnly ? 'is-on' : ''}`}
+          aria-pressed={active.length === 0 && !liveOnly}
+          onClick={() => {
+            setActive([])
+            setLiveOnly(false)
+          }}
+        >
+          All <span className="mono">{projects.length}</span>
+        </button>
+        {CATEGORIES.map((c) => (
+          <button
+            key={c}
+            type="button"
+            className={`rfilter ${active.includes(c) ? 'is-on' : ''}`}
+            aria-pressed={active.includes(c)}
+            onClick={() => toggle(c)}
+          >
+            {c} <span className="mono">{counts[c]}</span>
+          </button>
+        ))}
+        <button
+          type="button"
+          className={`rfilter ${liveOnly ? 'is-on' : ''}`}
+          aria-pressed={liveOnly}
+          onClick={() => setLiveOnly((v) => !v)}
+        >
+          Has live demo <span className="mono">{liveCount}</span>
+        </button>
+      </div>
+
       <MasterDetail
-        items={projects}
+        items={items}
+        emptyMessage={
+          debouncedQuery.trim() !== ''
+            ? `No projects match “${debouncedQuery.trim()}”.`
+            : 'No projects match these filters.'
+        }
+        onClearFilters={filtered ? reset : undefined}
+        clearLabel="Clear search and filters"
         label="Open source projects"
         getId={(p) => p.slug}
         getHref={(p) => p.repo}

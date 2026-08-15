@@ -1,3 +1,4 @@
+import mediumImages from '@/data/medium-images.json'
 import { POSTS, EXTERNAL_POSTS } from '@/lib/posts'
 import { openSourceProjects } from '@/lib/open-source'
 import { FIGMA_RESOURCES } from '@/lib/figma-resources'
@@ -28,6 +29,7 @@ const writingItems = [
     meta: p.platform,
     href: p.url,
     external: true,
+    image: (mediumImages as Record<string, string>)[p.url],
     date: p.date,
   })),
 ]
@@ -55,6 +57,7 @@ const designItems = [...FIGMA_RESOURCES]
     sub: r.blurb,
     meta: `Figma · ${r.duplicates.toLocaleString('en-US')} copies`,
     href: `/resources/design-dev#${r.slug}`,
+    image: r.cover,
   }))
 
 const TABS: TeaserTab[] = [
