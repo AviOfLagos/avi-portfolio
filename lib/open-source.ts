@@ -31,7 +31,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     topics: [],
     stars: 15,
     language: 'JavaScript',
-    license: null,
+    license: 'MIT License',
     hasReadme: true,
     contributionNote:
       'Two issues are open. The documentation loader in src/ is the easiest place to start — adding support for a new documentation source or a new technology detector is self-contained work.',
@@ -63,7 +63,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     ],
     stars: 0,
     language: 'TypeScript',
-    license: null,
+    license: 'Apache License 2.0',
     hasReadme: true,
     contributionNote:
       'Twelve open issues and the most active repo here — start there. The wire contract lives in packages/shared/src/wire.ts and is mirrored in every SDK, so a new SDK in another language is a well-specified piece of work.',
@@ -109,7 +109,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     topics: [],
     stars: 1,
     language: 'Shell',
-    license: null,
+    license: 'MIT License',
     hasReadme: true,
     contributionNote:
       'No open issues. Adding an eighth agent is the clearest contribution: copy an existing agent\'s markdown definition and memory files, then register it in SKILL.md and setup.sh.',
@@ -127,7 +127,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     topics: [],
     stars: 0,
     language: 'TypeScript',
-    license: null,
+    license: 'MIT License',
     hasReadme: true,
     contributionNote:
       'No open issues. Replacing the placeholder README with a real one is the most useful first PR; after that, porting a remaining panel from the legacy prototype to the Next.js app is well-defined work.',
@@ -162,7 +162,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     topics: ['ai', 'agent', 'branding', 'orchestration'],
     stars: 1,
     language: 'TypeScript',
-    license: null,
+    license: 'MIT License',
     hasReadme: true,
     contributionNote:
       'No open issues. The deployment behind the listed homepage is down — getting it running again, or documenting local setup so others can, is the practical entry point.',
@@ -180,7 +180,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     topics: [],
     stars: 0,
     language: 'TypeScript',
-    license: null,
+    license: 'MIT License',
     hasReadme: true,
     contributionNote:
       'No open issues. Swapping the mock auth for a real provider is the obvious next step, and the placeholder README needs replacing.',
@@ -198,7 +198,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     topics: [],
     stars: 0,
     language: 'TypeScript',
-    license: null,
+    license: 'MIT License',
     hasReadme: true,
     contributionNote:
       'No open issues. The generation endpoint is a single Express handler, so changing prompt categories or difficulty levels touches very little code.',
@@ -215,7 +215,7 @@ export const openSourceProjects: OpenSourceProject[] = [
     topics: [],
     stars: 0,
     language: 'JavaScript',
-    license: null,
+    license: 'MIT License',
     hasReadme: true,
     contributionNote:
       'No open issues. The README claims MIT but no LICENSE file is committed — adding one is a one-file PR. Beyond that, the matching logic for unscheduled recordings is the part most likely to need work.',

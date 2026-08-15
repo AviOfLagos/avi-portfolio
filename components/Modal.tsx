@@ -1,6 +1,7 @@
 'use client'
 
-import { useCallback, useEffect, useId, useRef, type ReactNode } from 'react'
+import { useCallback, useEffect, useId, useRef, useState, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 
 /**
  * Accessible dialog primitive. Shared so every modal on the site behaves the
@@ -23,6 +24,9 @@ export function Modal({
   const id = useId()
   const panelRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => setMounted(true), [])
 
   const focusables = useCallback(
     () =>
@@ -72,9 +76,13 @@ export function Modal({
     }
   }, [open, onClose, focusables])
 
-  if (!open) return null
+  if (!open || !mounted) return null
 
-  return (
+  // Portalled to the body on purpose. `.section` carries content-visibility,
+  // which implies paint containment, and a painted-contained ancestor becomes
+  // the containing block for position: fixed — so an in-place overlay would be
+  // trapped inside the section instead of covering the viewport.
+  return createPortal(
     <div className="modal-overlay" onClick={onClose}>
       <div
         ref={panelRef}
@@ -99,6 +107,7 @@ export function Modal({
 
         {footer && <div className="modal__foot">{footer}</div>}
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
