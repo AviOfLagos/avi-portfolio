@@ -102,7 +102,7 @@ export const VENTURES: Venture[] = [
       "Re-architected the content engine from single-shot prompting to an orchestrator model that routes work to specialised agents, skills and tools, and reports on drift across the fleet.",
       "Designed an AI-enabled onboarding flow that captures brand identity, goals, tone and audience as structured context every downstream agent can use.",
       "Specified the social infrastructure rewrite covering LinkedIn, TikTok and YouTube integrations with per-user resource allocation to dodge shared API rate limits.",
-      "Defined DeepEllum, the catalog customers hire from: pre-built specialists installed in one click, custom AI Staff provisioned with their own title, department and brief, and subscription-aware installation so entitlements match what a plan pays for.",
+      "Defined DeepEllum, the MCP-compatible registry the specialists come from \u2014 agents, skills, tools and integrations, browsable by category and installable in one click, with subscription-aware installation so entitlements match what a plan pays for. MCP compatibility is the point: an agent installed into an Ellum workspace is not welded to it.",
       "Made the work auditable rather than a black box: every output grounded in the Knowledge Center with citations, a network view of each handoff, and an inbox that holds anything needing approval before it goes live.",
       "Ran the pilot with roughly 50 users, converted feedback into prioritised iterations, and produced the investor-ready materials that supported fundraising.",
       "Led a distributed team of eight across backend, frontend, design, QA and marketing on a weekly standup and sprint cadence.",
