@@ -79,9 +79,9 @@ export function Hero() {
             className="hero__tagline hero__fade"
             style={{ '--d': '1.1s', '--fade-y': '24px' } as React.CSSProperties}
           >
-            I turn fuzzy ideas into <strong>products people actually use</strong>, and run the
-            teams that ship them. Currently: an AI marketing OS, an agent registry, and Nigeria&rsquo;s
-            first verified solar marketplace.
+            I map how teams actually work, <strong>rebuild those workflows around AI agents</strong>,
+            and build the first agents myself. Currently: an AI marketing OS, an MCP agent registry,
+            and the agents that run my own studio&rsquo;s delivery.
           </p>
           <button
             className="hero__scroll nav__link hero__fade"

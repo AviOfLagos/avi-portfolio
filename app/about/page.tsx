@@ -11,16 +11,20 @@ import { CertificationList } from '@/components/CertificationList'
 /** How I work, in the terms I would defend in a review. */
 const PHILOSOPHY = [
   {
+    title: 'Reimagine, not just automate',
+    body: 'Putting an agent on a broken workflow gets you a faster broken workflow. I map the whole thing first, handoffs included, and look for the step that should not exist at all.',
+  },
+  {
+    title: 'Own the agent after launch',
+    body: 'Shipping an agent is the start. I track whether people use it, whether its output holds up, and I replace it without sentiment when a better approach shows up.',
+  },
+  {
     title: 'Settle it with something clickable',
     body: 'A prototype ends an argument that a third document would only extend. If two people read the same spec two ways, I build the smallest version of both and we look at them.',
   },
   {
     title: 'The backlog is the strategy',
     body: 'Everyone agrees with the roadmap deck. What you actually chose is whatever sits at the top of the backlog on Monday, so that is the artefact I guard.',
-  },
-  {
-    title: 'Write the acceptance criteria first',
-    body: 'If I cannot say what "done" looks like before work starts, the requirement is not ready. Most scope arguments are really an unwritten criterion surfacing late.',
   },
   {
     title: 'Ship, then look',
@@ -70,35 +74,35 @@ export default function AboutPage() {
           <FadeUp>
             <p>
               I&rsquo;m David Olatunji, though almost everyone calls me Avi — online I&rsquo;m
-              AviOfLagos. Product owner and technical product manager based in Lagos, working with
-              teams across Toronto, New York and Berlin. My background is split down the middle:
+              AviOfLagos. I lead AI product and AI transformation work from Lagos, with teams across
+              Toronto, New York and Berlin. My background is split down the middle:
               electrical engineering, then computer science, then four years of shipping products.
               That split is basically the job description.
             </p>
           </FadeUp>
           <FadeUp delay={0.06}>
             <p>
-              In practice that means I can sit in a technical design review and a pricing
-              conversation on the same afternoon, and translate faithfully in both directions. I
-              write the roadmap and the acceptance criteria. I also open Figma and the codebase when
-              a spec is faster to settle with a prototype than a paragraph.
+              In practice that means I can sit with an operations lead to map how their week really
+              runs, then go and build the agent that changes it: the skills file, the MCP connection,
+              the review step where a human signs off. I hold the roadmap and the success metrics,
+              and I open the codebase when that is faster than writing another spec.
             </p>
           </FadeUp>
           <FadeUp delay={0.1}>
             <p>
-              Most of my recent work is AI products: an orchestration platform for marketing teams, a
-              registry that lets agents install new capabilities, a voice AI that runs first-round
-              interviews. Before that, marketplaces, real estate, then solar. The thread is the
+              Most of my recent work is AI: an orchestration platform for marketing teams, a registry
+              that lets agents install new capabilities, a voice AI that runs first-round interviews,
+              and the agents that now run sprint planning and reporting at my own studio. Before that, marketplaces, real estate, then solar. The thread is the
               same: take something people currently do with spreadsheets, phone calls and hope, and
               make it a product.
             </p>
           </FadeUp>
           <FadeUp delay={0.14}>
             <p>
-              Alongside client and venture work I mentor product managers at HNG, Africa&rsquo;s
-              largest tech internship programme, where I&rsquo;ve helped shape curriculum and success
-              metrics for thousands of participants and run the community events that go with it.
-              Teaching the fundamentals is the fastest way I know to keep re-checking my own.
+              Alongside that I coordinate team leads and mentors at HNG, Africa&rsquo;s largest tech
+              internship programme: a volunteer network where nobody reports to me, so everything
+              moves by influence. I&rsquo;m leading its shift to AI-native ways of working, from the
+              curriculum to the office hours that get people actually using the tools.
             </p>
           </FadeUp>
         </div>

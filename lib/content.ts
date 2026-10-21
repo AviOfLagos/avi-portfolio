@@ -7,8 +7,8 @@ export const PERSON = {
   aliases: ["Avi", "Avi of Lagos", "AviOfLagos", "avioflagos", "David Avi Olatunji"],
   site: "avi.nexprove.com",
   initials: "Avi",
-  title: "Technical Product Manager",
-  secondaryTitle: "Product Owner",
+  title: "AI Product & Transformation Lead",
+  secondaryTitle: "Hands-on agent builder",
   location: "Lagos, Nigeria",
   timezone: "Africa/Lagos",
   email: "avi@nexprove.com",
@@ -38,11 +38,11 @@ export const PERSON = {
     devto: "https://dev.to/avioflagos",
   },
   tagline:
-    "I turn fuzzy ideas into products people actually use, and run the teams that ship them.",
+    "I map how teams actually work, rebuild those workflows around AI agents, and build the first agents myself.",
   // Portrait shown on /about and reused for the about OG card.
   portrait: "/gallery/avi-portrait.webp",
   summary:
-    "Technical Product Manager and Product Owner with 5+ years taking AI, SaaS, fintech and marketplace products from ambiguous problem to shipped release. I own the full arc: discovery, PRDs and technical specifications, backlog and acceptance criteria, release planning. I also build working prototypes, so a contested spec gets settled with something clickable instead of another document.",
+    "AI product and transformation lead with 5+ years running product for distributed teams. I map end-to-end workflows to find where AI changes the work rather than just speeding it up, prioritise the intake against business outcomes, and build the agents, skills files and MCP connections myself. Then I own what ships: adoption, success metrics, human review, and iterating or replacing agents when something better comes along.",
 };
 
 export type Venture = {
@@ -92,12 +92,13 @@ export const VENTURES: Venture[] = [
     niche: "Marketing automation · AI agents",
     cover: "/shots/ellum-ai.webp",
     url: "https://www.ellum.ai",
-    role: "Technical Product Manager & Product Owner",
+    role: "AI Product Lead & Product Owner",
     oneLiner: "An AI operating system for marketing teams.",
     desc: "An AI operating system for marketing, in four parts: a shared knowledge base, a roster of installable specialist agents, an orchestrator above them, and an inbox where approvals and questions come back to you.",
     context:
       "Small marketing teams drown in the gap between strategy and execution. They know what they want to say; they do not have the hours to plan a calendar, draft for six platforms, and publish on schedule. Generic AI writing tools made the drafting marginally faster and left every other part of the job untouched.",
     contributions: [
+      "Mapped the marketing team workflow end to end (strategy, calendar, drafting, approvals, publishing) and redesigned it around agents instead of bolting AI onto the drafting step alone.",
       "Owned the product from discovery through MVP and into a V2 architecture defined across eleven milestones and seven epics.",
       "Re-architected the content engine from single-shot prompting to an orchestrator model that routes work to specialised agents, skills and tools, and reports on drift across the fleet.",
       "Designed an AI-enabled onboarding flow that captures brand identity, goals, tone and audience as structured context every downstream agent can use.",
@@ -362,25 +363,27 @@ export type Role = {
 export const EXPERIENCE: Role[] = [
   {
     company: "Ellum AI",
-    title: "Technical Product Manager & Product Owner",
+    title: "AI Product Lead & Product Owner",
     period: "2024 - Present",
     meta: "Remote · AI SaaS",
     points: [
       "Own the product end to end for an AI marketing platform, from the original pilot through a V2 architecture scoped across 11 milestones and 7 epics.",
+      "Mapped the full marketing workflow before automating any of it, then redesigned it around agents with human approval built in where a wrong output would be expensive.",
       "Re-architected the content engine from single-shot prompting to an orchestrator that routes work to specialised agents, skills and tools, so new capabilities ship without changes to the core platform.",
       "Defined an MCP-compatible capability registry (DeepEllum) covering agents, skills, tools, CLIs and integrations, with subscription-aware installation so entitlements map to what customers pay for.",
       "Specified an AI-enabled onboarding flow capturing brand identity, goals and audience as structured context for every downstream agent, plus a social publishing rewrite across LinkedIn, TikTok and YouTube.",
-      "Ran the pilot with ~50 users, converted feedback into a prioritised roadmap, and produced the investor-ready materials used in fundraising conversations.",
+      "Ran the pilot with ~50 users, tracked adoption and drift across the agent fleet, turned feedback into a prioritised roadmap, and produced the investor-ready materials used in fundraising.",
       "Lead a distributed team of 8 across backend, frontend, design, QA and marketing on a weekly sprint and standup cadence.",
     ],
   },
   {
     company: "Nexprove Agency",
-    title: "Technical Product Manager & Product Owner",
+    title: "Founder · Product & AI Lead",
     period: "Jun 2022 - Dec 2025",
     meta: "Remote · Full-time",
     points: [
       "Led 6+ client products across AI, fintech, real estate and Web3 from discovery to MVP, owning roadmaps, requirements and go-to-market.",
+      "Rebuilt the agency's own delivery around AI: wrote skills files and connected agents to Notion and other tools over MCP to run sprint planning, standups and reporting, and set up a single intake for client requests prioritised against outcomes.",
       "Introduced product processes and design systems that cut design iteration time by ~40%, improving delivery velocity across engagements.",
       "Translated client business goals into PRDs, functional and technical requirements, user stories and acceptance criteria that engineering could execute without rework.",
       "Scoped a cross-border remittance platform for African corridors covering multi-currency wallets, partner-first PSP routing with fallback, a double-entry ledger, tiered KYC and AML screening.",
@@ -393,8 +396,8 @@ export const EXPERIENCE: Role[] = [
     period: "Jul 2023 - Apr 2026",
     meta: "Remote · Volunteer",
     points: [
-      "Led product coordination and mentorship across 30,000+ participants annually in Africa's largest tech internship programme, enforcing agile standards and improving delivery efficiency by ~50%.",
-      "Currently restructuring the product-education model around AI-native product engineering, defining an AI Product Engineer curriculum spanning frontend, backend, DevOps, AI-assisted development and post-launch maintenance.",
+      "Coordinated team leads and mentors across 30,000+ participants a year in Africa's largest tech internship programme, a volunteer network with no direct authority, enforcing agile standards and improving delivery efficiency by ~50%.",
+      "Led the shift to AI-native ways of working: defined an AI Product Engineer curriculum spanning frontend, backend, DevOps, AI-assisted development and post-launch maintenance, and drove adoption through mentors, office hours and onboarding.",
       "Facilitated strategy co-creation with senior stakeholders, driving organisational alignment.",
       "Directed large-scale community events end to end, including the annual HNG Mentors Hangout and finalist meetups.",
     ],
@@ -425,6 +428,17 @@ export const EXPERIENCE: Role[] = [
 
 export const SKILLS = [
   {
+    group: "AI Transformation",
+    items: [
+      "Workflow mapping",
+      "AI strategy & prioritisation",
+      "Adoption & enablement",
+      "Champion networks",
+      "Change management",
+      "Success metrics & ROI",
+    ],
+  },
+  {
     group: "Product & Delivery",
     items: [
       "Roadmapping",
@@ -440,9 +454,13 @@ export const SKILLS = [
   {
     group: "AI",
     items: [
-      "LLM applications",
       "AI agents",
-      "MCP",
+      "Skills files",
+      "MCP servers",
+      "Prompt & context engineering",
+      "Human-in-the-loop review",
+      "Claude Code",
+      "LLM applications",
       "Agent orchestration",
       "Retrieval",
       "Browser automation",
