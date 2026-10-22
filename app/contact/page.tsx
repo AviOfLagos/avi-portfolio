@@ -34,8 +34,8 @@ export default function ContactPage() {
           </Reveal>
         </h1>
         <p className="page-head__lede" style={{ marginInline: 'auto', textAlign: 'center' }}>
-          Product work, fractional product ownership, or just a conversation about something
-          you&rsquo;re building. I read everything.
+          AI transformation roles, AI product work, or just a conversation about rebuilding how
+          your team works with agents. I read everything.
         </p>
 
         <div

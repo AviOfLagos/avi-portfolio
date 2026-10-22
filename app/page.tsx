@@ -13,8 +13,8 @@ export default function Home() {
 
       <Marquee
         items={[
-          'Product Strategy', '·', 'AI Products', '·', 'Marketplaces', '·',
-          'Zero to One', '·', 'From Lagos to the World', '·',
+          'AI Transformation', '·', 'Agents & MCP', '·', 'Workflow Redesign', '·',
+          'Adoption', '·', 'From Lagos to the World', '·',
         ]}
       />
 
@@ -35,14 +35,14 @@ export default function Home() {
       <section className="section container">
         <div style={{ display: 'grid', gap: '3rem' }}>
           <h2 className="big-type">
-            <Reveal>I write the roadmap, prototype</Reveal>
+            <Reveal>Reimagine the work,</Reveal>
             <Reveal delay={0.08}>
-              the thing, <span className="dim">and keep engineering,</span>
+              build the agent, <span className="dim">then stay until</span>
             </Reveal>
             <Reveal delay={0.16}>
-              <span className="dim">design and business pointed</span>
+              <span className="dim">the team actually</span>
             </Reveal>
-            <Reveal delay={0.24}>at the same outcome.</Reveal>
+            <Reveal delay={0.24}>works that way.</Reveal>
           </h2>
           <FadeUp>
             <div className="stats">

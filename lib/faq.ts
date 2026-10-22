@@ -19,7 +19,7 @@ export const FAQS: Faq[] = [
     id: 'what-work',
     question: 'What kind of work do you take on?',
     answer:
-      'Product ownership and technical product management, usually on something with real ambiguity in it: an AI product finding its shape, a marketplace that has to earn trust on both sides, a platform being rebuilt rather than patched. I am most useful between the idea and the first shipped version, where the job is deciding what to build, in what order, and what to leave out.',
+      'AI transformation and AI product work. Either a team that wants to rebuild how it works around agents, or a product with AI at its core that needs someone holding the roadmap. I map the workflow first, pick the few changes that move a real business number, build the first agents and skills myself, and then drive adoption until the new way is the normal way.',
   },
   {
     id: 'engagement-type',
@@ -61,7 +61,7 @@ export const FAQS: Faq[] = [
     id: 'ai-products',
     question: 'How much of your work is AI, really?',
     answer:
-      'Most of the recent work: an orchestration platform for marketing teams, a capability registry that lets agents install new tools, a voice AI that runs first-round interviews. The useful part is rarely the model. It is deciding what the model is allowed to do, what happens when it is wrong, and which parts of the job should never have been a model in the first place.',
+      'Most of it, and hands-on. An orchestration platform for marketing teams, a capability registry that lets agents install new tools over MCP, a voice AI that runs first-round interviews, and the skills files and MCP connections that run my own agency\'s delivery. The useful part is rarely the model. It is deciding what the agent is allowed to do, where a human approves, how you know it is working, and which parts of the job should never have been a model in the first place.',
   },
   {
     id: 'mentoring',

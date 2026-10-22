@@ -49,7 +49,10 @@ export const metadata: Metadata = {
   creator: PERSON.name,
   publisher: PERSON.name,
   keywords: [
-    'Technical Product Manager',
+    'AI Transformation',
+    'AI Enablement',
+    'AI agents',
+    'MCP',
     'Product Owner',
     'AI products',
     'Lagos',
