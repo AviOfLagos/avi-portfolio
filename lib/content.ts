@@ -7,8 +7,8 @@ export const PERSON = {
   aliases: ["Avi", "Avi of Lagos", "AviOfLagos", "avioflagos", "David Avi Olatunji"],
   site: "avi.nexprove.com",
   initials: "Avi",
-  title: "AI Product & Transformation Lead",
-  secondaryTitle: "Hands-on agent builder",
+  title: "AI Product Lead",
+  secondaryTitle: "Hands-on builder",
   location: "Lagos, Nigeria",
   timezone: "Africa/Lagos",
   email: "avi@nexprove.com",
@@ -42,7 +42,7 @@ export const PERSON = {
   // Portrait shown on /about and reused for the about OG card.
   portrait: "/gallery/avi-portrait.webp",
   summary:
-    "AI product and transformation lead with 5+ years running product for distributed teams. I map end-to-end workflows to find where AI changes the work rather than just speeding it up, prioritise the intake against business outcomes, and build the agents, skills files and MCP connections myself. Then I own what ships: adoption, success metrics, human review, and iterating or replacing agents when something better comes along.",
+    "AI product lead with 5+ years running product for distributed teams. I map end-to-end workflows to find where AI changes the work rather than just speeding it up, prioritise the intake against business outcomes, and build the agents, skills files and MCP connections myself. Then I own what ships: adoption, success metrics, human review, and iterating or replacing agents when something better comes along.",
 };
 
 export type Venture = {
@@ -104,6 +104,7 @@ export const VENTURES: Venture[] = [
       "Designed an AI-enabled onboarding flow that captures brand identity, goals, tone and audience as structured context every downstream agent can use.",
       "Specified the social infrastructure rewrite covering LinkedIn, TikTok and YouTube integrations with per-user resource allocation to dodge shared API rate limits.",
       "Defined DeepEllum, the catalog customers hire from: pre-built specialists installed in one click, custom AI Staff provisioned with their own title, department and brief, and subscription-aware installation so entitlements match what a plan pays for.",
+      "Built an eval suite from real failure cases and ran it on every prompt or model change, so agents improved against a measured baseline instead of a gut feel.",
       "Made the work auditable rather than a black box: every output grounded in the Knowledge Center with citations, a network view of each handoff, and an inbox that holds anything needing approval before it goes live.",
       "Ran the pilot with roughly 50 users, converted feedback into prioritised iterations, and produced the investor-ready materials that supported fundraising.",
       "Led a distributed team of eight across backend, frontend, design, QA and marketing on a weekly standup and sprint cadence.",
@@ -368,7 +369,8 @@ export const EXPERIENCE: Role[] = [
     meta: "Remote · AI SaaS",
     points: [
       "Own the product end to end for an AI marketing platform, from the original pilot through a V2 architecture scoped across 11 milestones and 7 epics.",
-      "Mapped the full marketing workflow before automating any of it, then redesigned it around agents with human approval built in where a wrong output would be expensive.",
+      "Mapped the full marketing workflow before automating any of it, including the structured and unstructured data each step depends on, then redesigned it around agents with human approval built in where a wrong output would be expensive.",
+      "Set success metrics per agent and built an eval suite from real failure cases, scored on every prompt or model change, with production monitoring that flags drift in output quality before customers notice.",
       "Re-architected the content engine from single-shot prompting to an orchestrator that routes work to specialised agents, skills and tools, so new capabilities ship without changes to the core platform.",
       "Defined an MCP-compatible capability registry (DeepEllum) covering agents, skills, tools, CLIs and integrations, with subscription-aware installation so entitlements map to what customers pay for.",
       "Specified an AI-enabled onboarding flow capturing brand identity, goals and audience as structured context for every downstream agent, plus a social publishing rewrite across LinkedIn, TikTok and YouTube.",
@@ -384,6 +386,7 @@ export const EXPERIENCE: Role[] = [
     points: [
       "Led 6+ client products across AI, fintech, real estate and Web3 from discovery to MVP, owning roadmaps, requirements and go-to-market.",
       "Rebuilt the agency's own delivery around AI: wrote skills files and connected agents to Notion and other tools over MCP to run sprint planning, standups and reporting, and set up a single intake for client requests prioritised against outcomes.",
+      "Ran AI enablement for the team and client teams: workshops, onboarding and hands-on pairing until new tools were part of the normal week, measured by usage rather than attendance.",
       "Introduced product processes and design systems that cut design iteration time by ~40%, improving delivery velocity across engagements.",
       "Translated client business goals into PRDs, functional and technical requirements, user stories and acceptance criteria that engineering could execute without rework.",
       "Scoped a cross-border remittance platform for African corridors covering multi-currency wallets, partner-first PSP routing with fallback, a double-entry ledger, tiered KYC and AML screening.",
@@ -459,6 +462,8 @@ export const SKILLS = [
       "MCP servers",
       "Prompt & context engineering",
       "Human-in-the-loop review",
+      "Agent evals",
+      "Drift monitoring",
       "Claude Code",
       "LLM applications",
       "Agent orchestration",
